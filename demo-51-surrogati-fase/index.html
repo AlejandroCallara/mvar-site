@@ -1,0 +1,305 @@
+<!DOCTYPE html><html lang="en" class="" style="scroll-padding:60px"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><link rel="preload" as="image" href="/build/demo_51_01-b53ae986e0f09463cf4d2a4558a954f8.png"/><link rel="preload" as="image" href="/build/demo_51_02-0bd045a641c4c7592e10c215c899d5c1.png"/><link rel="preload" as="image" href="/build/demo_51_03-a73b0c9537e7214098d053bd64e708a3.png"/><link rel="preload" as="image" href="/build/demo_51_04-4aeb7889d7173e850d7b0dd77f78d26b.png"/><title>Demo 51 - PDC e DTF con surrogati a fase randomizzata - VAR e causalità di Granger</title><meta property="og:title" content="Demo 51 - PDC e DTF con surrogati a fase randomizzata - VAR e causalità di Granger"/><meta name="generator" content="mystmd"/><meta name="description" content="Dispensa del corso Metodi per l&#x27;analisi di segnali multidimensionali"/><meta property="og:description" content="Dispensa del corso Metodi per l&#x27;analisi di segnali multidimensionali"/><meta name="keywords" content=""/><meta name="image" content="/build/demo_51_01-b53ae986e0f09463cf4d2a4558a954f8.png"/><meta property="og:image" content="/build/demo_51_01-b53ae986e0f09463cf4d2a4558a954f8.png"/><link rel="icon" href="/favicon.ico"/><link rel="modulepreload" href="/build/entry.client-NNNALS5X.js"/><link rel="modulepreload" href="/build/_shared/chunk-UBXX7P26.js"/><link rel="modulepreload" href="/build/_shared/chunk-KB7LMXDF.js"/><link rel="modulepreload" href="/build/_shared/chunk-RAQ24GF6.js"/><link rel="modulepreload" href="/build/_shared/chunk-LS4ALTVG.js"/><link rel="modulepreload" href="/build/_shared/chunk-7FWBVTMU.js"/><link rel="modulepreload" href="/build/_shared/chunk-7YIJOVKB.js"/><link rel="modulepreload" href="/build/_shared/chunk-MCEKF3CD.js"/><link rel="modulepreload" href="/build/_shared/chunk-BVQ4IR5U.js"/><link rel="modulepreload" href="/build/_shared/chunk-EVF4GZYD.js"/><link rel="modulepreload" href="/build/_shared/chunk-6LPWM5X2.js"/><link rel="modulepreload" href="/build/_shared/chunk-WNVPCTL5.js"/><link rel="modulepreload" href="/build/_shared/chunk-IZ3HLG6T.js"/><link rel="modulepreload" href="/build/_shared/chunk-TBCV2LPN.js"/><link rel="modulepreload" href="/build/_shared/chunk-SWBLOF4V.js"/><link rel="modulepreload" href="/build/_shared/chunk-J56WUMNK.js"/><link rel="modulepreload" href="/build/root-C5CK33H3.js"/><link rel="modulepreload" href="/build/_shared/chunk-WGW5MSUV.js"/><link rel="modulepreload" href="/build/routes/$-6ALOT4PW.js"/><link rel="stylesheet" href="/build/_assets/app-XNK7MHNS.css"/><link rel="stylesheet" href="/build/_assets/thebe-core-VKVHG5VY.css"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jupyter-matplotlib@0.11.3/css/mpl_widget.css"/><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous"/><link rel="stylesheet" href="/myst-theme.css"/><script>
+  const savedTheme = localStorage.getItem("myst:theme");
+  const theme = window.matchMedia("(prefers-color-scheme: light)").matches ? 'light' : 'dark';
+  const classes = document.documentElement.classList;
+  const hasAnyTheme = classes.contains('light') || classes.contains('dark');
+  if (!hasAnyTheme) classes.add(savedTheme ?? theme);
+</script></head><body class="m-0 bg-myst-bg"><div class="myst-skip-to-article fixed top-1 left-1 h-[0px] w-[0px] focus-within:z-40 focus-within:h-auto focus-within:w-auto bg-myst-bg overflow-hidden focus-within:p-2 focus-within:ring-1" aria-label="skip to content options"><a href="#skip-to-frontmatter" class="myst-skip-to-link block px-2 py-1 text-myst-text underline">Skip to article frontmatter</a><a href="#skip-to-article" class="myst-skip-to-link block px-2 py-1 text-myst-text underline">Skip to article content</a></div><dialog id="myst-no-css" style="position:fixed;left:0px;top:0px;width:100%;height:100vh;font-size:4rem;padding:1rem;color:black;background:white"><strong>Site not loading correctly?</strong><p>This may be due to an incorrect <code>BASE_URL</code> configuration. See<!-- --> <a href="https://mystmd.org/guide/deployment#deploy-base-url">the MyST Documentation</a> <!-- -->for reference.</p><script>
+    (() => {
+            // Test for has-styling variable set by the MyST stylesheet
+            const node = document.currentScript.parentNode;
+            const hasCSS = window.getComputedStyle(node).getPropertyValue("--has-styling");
+            if (hasCSS === ""){
+                    node.showModal();
+            }
+
+    })()
+</script></dialog><div class="myst-top-nav myst-bg-translucent backdrop-blur shadow dark:shadow-2xl p-3 md:px-8 sticky w-full top-0 z-30 min-h-[60px]"><nav class="myst-top-nav-bar flex items-center justify-between flex-nowrap max-w-[1440px] mx-auto"><div class="flex flex-row xl:min-w-[19.5rem] mr-2 sm:mr-7 justify-start items-center shrink-0"><div class="block xl:hidden"><button class="myst-top-nav-menu-button flex items-center justify-center border-myst-border-strong text-myst-text-secondary hover:text-myst-text w-10 h-10"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" width="1.5rem" height="1.5rem"><path fill-rule="evenodd" d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd"></path></svg><span class="sr-only">Open Menu</span></button></div><a class="myst-home-link flex items-center ml-3 text-myst-text w-fit md:ml-5 xl:ml-7" href="/"><span class="text-md sm:text-xl tracking-tight sm:mr-5">VAR e causalità di Granger</span></a></div><div class="flex items-center flex-grow w-auto"><div class="flex-grow hidden text-md lg:block"></div><div class="flex-grow block"></div><button type="button" aria-haspopup="dialog" aria-expanded="false" data-state="closed" class="myst-search-bar flex items-center h-10 aspect-square sm:w-64 text-left text-myst-text-secondary border border-myst-border-strong rounded-lg bg-myst-bg-secondary dark:bg-myst-surface-hover myst-search-bar-disabled hover:ring-myst-focus-ring hover:border-myst-focus-ring"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="p-2.5 h-10 w-10 aspect-square"><path fill-rule="evenodd" d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z" clip-rule="evenodd"></path></svg><span class="myst-search-text-placeholder hidden sm:block grow">Search</span><div aria-hidden="true" class="myst-search-shortcut items-center hidden mx-1 font-mono text-sm text-myst-text-secondary sm:flex gap-x-1"><kbd class="px-2 py-1 border border-myst-border-strong rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:shadow-none hide-mac">CTRL</kbd><kbd class="px-2 py-1 border border-myst-border-strong rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:shadow-none show-mac">⌘</kbd><kbd class="px-2 py-1 border border-myst-border-strong rounded-md shadow-[0px_2px_0px_0px_rgba(0,0,0,0.08)] dark:shadow-none ">K</kbd><script>
+;(() => {
+const script = document.currentScript;
+const root = script.parentElement;
+
+const isMac = /mac/i.test(
+      window.navigator.userAgentData?.platform ?? window.navigator.userAgent,
+    );
+root.querySelectorAll(".hide-mac").forEach(node => {node.classList.add(isMac ? "hidden" : "block")});
+root.querySelectorAll(".show-mac").forEach(node => {node.classList.add(!isMac ? "hidden" : "block")});
+})()</script></div></button><button class="myst-theme-button theme shrink-0 rounded-full border border-myst-border-strong hover:bg-myst-surface border-solid overflow-hidden text-myst-text-secondary w-8 h-8 ml-3" title="Toggle theme between light and dark mode" aria-label="Toggle theme between light and dark mode"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="myst-theme-moon-icon h-full w-full p-[18%] hidden dark:block"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" clip-rule="evenodd"></path></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="myst-theme-sun-icon h-full w-full p-[18%] dark:hidden"><path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"></path></svg></button><div class="block sm:hidden"></div><div class="hidden sm:block"></div></div></nav></div><div class="myst-primary-sidebar fixed xl:article-grid grid-gap xl:w-full xl:pointer-events-none overflow-auto max-xl:w-[75vw] max-xl:max-w-[350px] max-xl:!top-0 max-xl:h-screen hidden z-10" style="top:60px"><div class="myst-primary-sidebar-pointer pointer-events-auto xl:col-margin-left flex-col overflow-hidden max-xl:h-full hidden xl:flex"><div class="myst-primary-sidebar-nav flex-grow py-6 overflow-y-auto primary-scrollbar"><nav aria-label="Navigation" class="myst-primary-sidebar-topnav overflow-y-hidden transition-opacity lg:hidden ml-3 xl:ml-0 mr-3 max-w-[350px]"><div class="w-full px-1 text-myst-text font-medium"></div></nav><div class="my-3 border-b-2 lg:hidden"></div><nav aria-label="Table of Contents" class="myst-primary-sidebar-toc flex-grow overflow-y-hidden transition-opacity ml-3 xl:ml-0 mr-3 max-w-[350px]"><div class="myst-toc w-full px-1 text-myst-text"><a title="VAR e causalità di Granger" class="block break-words focus:outline outline-myst-focus-outline outline-2 rounded myst-toc-item p-2 my-1 rounded-lg hover:bg-myst-surface font-bold" href="/">VAR e causalità di Granger</a><a title="VAR e causalità di Granger" class="block break-words focus:outline outline-myst-focus-outline outline-2 rounded myst-toc-item p-2 my-1 rounded-lg hover:bg-myst-surface" href="/var-causalita-granger">VAR e causalità di Granger</a><div data-state="open" class="w-full"><div class="myst-toc-item flex flex-row w-full gap-2 pl-2 my-1 text-left rounded-lg outline-none hover:bg-myst-surface"><div title="Demo MATLAB" class="block break-words rounded py-2 grow font-semibold text-myst-accent-text cursor-pointer">Demo MATLAB</div><button class="self-stretch flex items-center flex-none px-1 rounded-l-md group hover:bg-myst-surface focus-visible:outline outline-myst-focus-outline outline-2" aria-label="Open Folder" type="button" aria-controls="radix-_R_1opsp_" aria-expanded="true" data-state="open"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="transition-transform duration-300 group-data-[state=open]:rotate-90 text-myst-text-secondary" height="1.5rem" width="1.5rem"><path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd"></path></svg></button></div><div data-state="open" id="radix-_R_1opsp_" class="pl-3 pr-[2px] collapsible-content" style="animation:none"><a title="Demo 45 - Validazione di un modello VAR" class="block break-words focus:outline outline-myst-focus-outline outline-2 rounded myst-toc-item p-2 my-1 rounded-lg hover:bg-myst-surface" href="/demo-45-validazione">Demo 45 - Validazione di un modello VAR</a><a title="Demo 47 - SNR diverso tra i canali" class="block break-words focus:outline outline-myst-focus-outline outline-2 rounded myst-toc-item p-2 my-1 rounded-lg hover:bg-myst-surface" href="/demo-47-snr">Demo 47 - SNR diverso tra i canali</a><a title="Demo 48 - Numerosità campionaria" class="block break-words focus:outline outline-myst-focus-outline outline-2 rounded myst-toc-item p-2 my-1 rounded-lg hover:bg-myst-surface" href="/demo-48-numerosita">Demo 48 - Numerosità campionaria</a><a title="Demo 49 - Ingresso comune non osservato" class="block break-words focus:outline outline-myst-focus-outline outline-2 rounded myst-toc-item p-2 my-1 rounded-lg hover:bg-myst-surface" href="/demo-49-ingresso-comune">Demo 49 - Ingresso comune non osservato</a><a title="Demo 50 - Bootstrap della GC sotto l’ipotesi nulla" class="block break-words focus:outline outline-myst-focus-outline outline-2 rounded myst-toc-item p-2 my-1 rounded-lg hover:bg-myst-surface" href="/demo-50-bootstrap">Demo 50 - Bootstrap della GC sotto l’ipotesi nulla</a><a title="Demo 51 - PDC e DTF con surrogati a fase randomizzata" aria-current="page" class="block break-words focus:outline outline-myst-focus-outline outline-2 rounded myst-toc-item p-2 my-1 rounded-lg myst-toc-item-exact bg-myst-active-bg active" href="/demo-51-surrogati-fase">Demo 51 - PDC e DTF con surrogati a fase randomizzata</a></div></div><div data-state="closed" class="w-full"><div class="myst-toc-item flex flex-row w-full gap-2 pl-2 my-1 text-left rounded-lg outline-none hover:bg-myst-surface"><div title="Esercitazioni" class="block break-words rounded py-2 grow cursor-pointer">Esercitazioni</div><button class="self-stretch flex items-center flex-none px-1 rounded-l-md group hover:bg-myst-surface focus-visible:outline outline-myst-focus-outline outline-2" aria-label="Open Folder" type="button" aria-controls="radix-_R_28psp_" aria-expanded="false" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" class="transition-transform duration-300 group-data-[state=open]:rotate-90 text-myst-text-secondary" height="1.5rem" width="1.5rem"><path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 0 1-1.06-1.06L14.69 12 7.72 5.03a.75.75 0 0 1 1.06-1.06l7.5 7.5Z" clip-rule="evenodd"></path></svg></button></div><div data-state="closed" id="radix-_R_28psp_" hidden="" class="pl-3 pr-[2px] collapsible-content" style="animation:none"></div></div><a title="Bibliografia essenziale" class="block break-words focus:outline outline-myst-focus-outline outline-2 rounded myst-toc-item p-2 my-1 rounded-lg hover:bg-myst-surface" href="/bibliografia">Bibliografia essenziale</a></div></nav></div><div class="myst-primary-sidebar-footer flex-none py-6 transition-all duration-700 translate-y-6 opacity-0 ml-3 xl:ml-0 mr-3 max-w-[350px]"><a class="myst-made-with-myst flex mx-auto text-myst-text-secondary w-fit hover:text-myst-link" href="https://mystmd.org/made-with-myst" target="_blank" rel="noreferrer"><svg style="width:24px;height:24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" stroke="none"><g id="icon"><path fill="currentColor" d="M23.8,54.8v-3.6l4.7-0.8V17.5l-4.7-0.8V13H36l13.4,31.7h0.2l13-31.7h12.6v3.6l-4.7,0.8v32.9l4.7,0.8v3.6h-15
+          v-3.6l4.9-0.8V20.8H65L51.4,53.3h-3.8l-14-32.5h-0.1l0.2,17.4v12.1l5,0.8v3.6H23.8z"></path><path fill="#F37726" d="M47,86.9c0-5.9-3.4-8.8-10.1-8.8h-8.4c-5.2,0-9.4-1.3-12.5-3.8c-3.1-2.5-5.4-6.2-6.8-11l4.8-1.6
+          c1.8,5.6,6.4,8.6,13.8,8.8h9.2c6.4,0,10.8,2.5,13.1,7.5c2.3-5,6.7-7.5,13.1-7.5h8.4c7.8,0,12.7-2.9,14.6-8.7l4.8,1.6
+          c-1.4,4.9-3.6,8.6-6.8,11.1c-3.1,2.5-7.3,3.7-12.4,3.8H63c-6.7,0-10,2.9-10,8.8"></path></g></svg><span class="self-center ml-2 text-sm">Made with MyST</span></a></div></div></div><main class="article-grid grid-gap"><article class="article-grid subgrid-gap col-screen article content"><div class="hidden"></div><div id="skip-to-frontmatter" aria-label="article frontmatter" class="myst-fm-block mb-8 pt-9"><div class="myst-fm-block-header flex items-center mb-5 h-6 text-sm font-light"><div class="flex-grow"></div><div class="myst-fm-block-badges"><a href="https://github.com/AlejandroCallara/mvar" title="GitHub Repository: AlejandroCallara/mvar" target="_blank" rel="noopener noreferrer" class="myst-fm-github-link text-inherit hover:text-inherit"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="1.25rem" height="1.25rem" class="myst-fm-github-icon inline-block mr-1 opacity-60 hover:opacity-100"><path d="M12 2.5c-5.4 0-9.8 4.4-9.8 9.7 0 4.3 2.8 8 6.7 9.2.5.1.7-.2.7-.5v-1.8c-2.4.5-3.1-.6-3.3-1.1-.1-.3-.6-1.1-1-1.4-.3-.2-.8-.6 0-.6s1.3.7 1.5 1c.9 1.5 2.3 1.1 2.8.8.1-.6.3-1.1.6-1.3-2.2-.2-4.4-1.1-4.4-4.8 0-1.1.4-1.9 1-2.6-.1-.2-.4-1.2.1-2.6 0 0 .8-.3 2.7 1 .8-.2 1.6-.3 2.4-.3.8 0 1.7.1 2.4.3 1.9-1.3 2.7-1 2.7-1 .5 1.3.2 2.3.1 2.6.6.7 1 1.5 1 2.6 0 3.7-2.3 4.6-4.4 4.8.4.3.7.9.7 1.8V21c0 .3.2.6.7.5 3.9-1.3 6.6-4.9 6.6-9.2 0-5.4-4.4-9.8-9.8-9.8z"></path></svg></a></div><div class="myst-fm-downloads-dropdown relative flex inline-block mx-1 grow-0" data-headlessui-state=""><button class="myst-fm-downloads-button relative ml-2 -mr-1" id="headlessui-menu-button-_R_s8ucp_" type="button" aria-haspopup="menu" aria-expanded="false" data-headlessui-state=""><span class="sr-only">Downloads</span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" width="1.25rem" height="1.25rem" class="myst-fm-downloads-icon stroke-myst-text-tertiary hover:stroke-myst-text"><title>Download</title><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"></path></svg></button></div></div><h1 class="myst-fm-block-title mb-0">Demo 51 - PDC e DTF con surrogati a fase randomizzata</h1><header class="myst-fm-authors-affiliations mt-4 not-prose"><div class="myst-fm-authors-list"><span class="myst-fm-author font-semibold text-sm myst-fm-author-item inline-block"><button class="myst-fm-author-popover focus:shadow-[0_0_0_2px] focus:shadow-black outline-none hover:underline" aria-label="Author Details" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="radix-_R_78ucp_" data-state="closed"><span class="myst-fm-author-name">Alejandro Luis Callara</span></button></span></div></header></div><div class="block my-10 lg:sticky lg:z-10 lg:h-0 lg:pt-0 lg:my-0 lg:ml-10 lg:col-margin-right" style="top:60px"><nav></nav></div><div id="skip-to-article"></div><h2 id="scopo" class="relative group"><span class="heading-text">Scopo</span><a class="no-underline text-inherit hover:text-inherit inline-block w-0 px-0 translate-x-[10px] font-normal select-none transition-opacity opacity-0 focus:opacity-100 group-hover:opacity-70" href="#scopo" title="Link to this Section" aria-label="Link to this Section">¶</a></h2><p>La demo conserva lo spettro di potenza di ciascun canale e randomizza indipendentemente le fasi. Per ogni surrogato ristima il VAR(2) e costruisce soglie puntuali per PDC e DTF.</p><h2 id="risultati-attesi" class="relative group"><span class="heading-text">Risultati attesi</span><a class="no-underline text-inherit hover:text-inherit inline-block w-0 px-0 translate-x-[10px] font-normal select-none transition-opacity opacity-0 focus:opacity-100 group-hover:opacity-70" href="#risultati-attesi" title="Link to this Section" aria-label="Link to this Section">¶</a></h2><ul><li><p>le connessioni coerenti con la struttura simulata superano la soglia in bande specifiche;</p></li><li><p>la DTF può mostrare propagazioni indirette che la PDC attenua;</p></li><li><p>le soglie al 95% sono puntuali e non controllano da sole tutti i confronti multipli.</p></li></ul><p>I valori numerici cambiano con le realizzazioni casuali. Lo script imposta il generatore quando è necessario per rendere il confronto riproducibile.</p><h2 id="output-verificato" class="relative group"><span class="heading-text">Output verificato</span><a class="no-underline text-inherit hover:text-inherit inline-block w-0 px-0 translate-x-[10px] font-normal select-none transition-opacity opacity-0 focus:opacity-100 group-hover:opacity-70" href="#output-verificato" title="Link to this Section" aria-label="Link to this Section">¶</a></h2><img id="pYyeMkNj2q" style="margin-left:auto;margin-right:auto" src="/build/demo_51_01-b53ae986e0f09463cf4d2a4558a954f8.png" alt="Output MATLAB di Demo 51 - PDC e DTF con surrogati a fase randomizzata" data-canonical-url="../assets/demo/demo_51_01.png" class=""/><img id="hBSeStOsKx" style="margin-left:auto;margin-right:auto" src="/build/demo_51_02-0bd045a641c4c7592e10c215c899d5c1.png" alt="Output MATLAB di Demo 51 - PDC e DTF con surrogati a fase randomizzata" data-canonical-url="../assets/demo/demo_51_02.png" class=""/><img id="f6P4FDX2a4" style="margin-left:auto;margin-right:auto" src="/build/demo_51_03-a73b0c9537e7214098d053bd64e708a3.png" alt="Output MATLAB di Demo 51 - PDC e DTF con surrogati a fase randomizzata" data-canonical-url="../assets/demo/demo_51_03.png" class=""/><img id="LrFsXBL4oF" style="margin-left:auto;margin-right:auto" src="/build/demo_51_04-4aeb7889d7173e850d7b0dd77f78d26b.png" alt="Output MATLAB di Demo 51 - PDC e DTF con surrogati a fase randomizzata" data-canonical-url="../assets/demo/demo_51_04.png" class=""/><h2 id="esecuzione" class="relative group"><span class="heading-text">Esecuzione</span><a class="no-underline text-inherit hover:text-inherit inline-block w-0 px-0 translate-x-[10px] font-normal select-none transition-opacity opacity-0 focus:opacity-100 group-hover:opacity-70" href="#esecuzione" title="Link to this Section" aria-label="Link to this Section">¶</a></h2><p>Scaricare <a target="_blank" rel="noreferrer" href="/build/Demo_51_PDC_DTF_phas-063afbd64f7324064afaee96dd824dcc.m" class="link whitespace-nowrap"><span class="link-text whitespace-normal">Demo<wbr/>_51<wbr/>_PDC<wbr/>_DTF<wbr/>_phase<wbr/>_surrogates.m</span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" class="link-icon"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"></path></svg></a>, aprirlo in MATLAB ed eseguirlo per sezioni oppure integralmente. Gli script sono stati verificati con MATLAB R2025b.</p><h2 id="codice-matlab" class="relative group"><span class="heading-text">Codice MATLAB</span><a class="no-underline text-inherit hover:text-inherit inline-block w-0 px-0 translate-x-[10px] font-normal select-none transition-opacity opacity-0 focus:opacity-100 group-hover:opacity-70" href="#codice-matlab" title="Link to this Section" aria-label="Link to this Section">¶</a></h2><div class="relative myst-code group not-prose my-5 text-sm shadow hover:shadow-md dark:shadow-2xl bg-stone-200/10"><div aria-label="code block content" class="block overflow-auto p-3 myst-code-body hljs"><pre style="background-color:#fff;padding:0;margin:0;background:transparent"><code class="language-matlab" style="white-space:pre">%% DEMO 2 - SIGNIFICATIVITA DI PDC E DTF CON PHASE RANDOMIZATION
+% Tutti i passaggi sono svolti direttamente nello script.
+%
+% Convenzione: misura(i,j,f) rappresenta la direzione j -&gt; i.
+
+clearvars;
+close all;
+clc;
+
+rng(11);
+
+%% Parametri
+M = 4;
+p = 2;
+N = 1000;
+burnIn = 500;
+dt = 1;
+fs = 1/dt;
+
+B = 200;                 % Aumentare a 1000 per l&#x27;analisi finale
+alpha = 0.05;
+nFrequencyBins = 128;
+frequency = linspace(0,fs/2,nFrequencyBins);
+
+rho = 0.9;
+f1 = 0.1;
+f3 = 0.3;
+Sigma = eye(M);
+
+%% Definizione del VAR(2)
+A = zeros(M,M,p);
+
+% x1: oscillatore a 0.1 Hz
+A(1,1,1) = 2*rho*cos(2*pi*f1);
+A(1,1,2) = -rho^2;
+
+% Connessioni 1 -&gt; 2 e 3 -&gt; 2
+A(2,1,1) = 1;
+A(2,3,1) = 0.5;
+
+% x3: oscillatore a 0.3 Hz e connessione 2 -&gt; 3
+A(3,3,1) = 2*rho*cos(2*pi*f3);
+A(3,3,2) = -rho^2;
+A(3,2,1) = 0.5;
+A(3,2,2) = 0.5;
+
+% Connessione 1 -&gt; 4
+A(4,1,2) = 1;
+
+%% Simulazione
+nTotal = N + burnIn + p;
+u = chol(Sigma,&quot;lower&quot;) * randn(M,nTotal);
+x = zeros(M,nTotal);
+x(:,1:p) = randn(M,p);
+
+for t = p+1:nTotal
+    x(:,t) = A(:,:,1)*x(:,t-1) ...
+           + A(:,:,2)*x(:,t-2) ...
+           + u(:,t);
+end
+
+x = x(:,burnIn+p+1:end);
+
+%% Stima del VAR(2)
+Y = x(:,p+1:N);
+Z = [x(:,p:N-1); ...
+     x(:,p-1:N-2)];
+
+Bhat = Y/Z;
+A1hat = Bhat(:,1:M);
+A2hat = Bhat(:,M+1:2*M);
+
+%% PDC e DTF osservate
+PDC = zeros(M,M,nFrequencyBins);
+DTF = zeros(M,M,nFrequencyBins);
+
+for n = 1:nFrequencyBins
+    f = frequency(n);
+
+    Af = eye(M) ...
+       - A1hat*exp(-1i*2*pi*f*dt) ...
+       - A2hat*exp(-1i*4*pi*f*dt);
+
+    Hf = Af\eye(M);
+
+    for i = 1:M
+        for j = 1:M
+            PDC(i,j,n) = abs(Af(i,j))^2 / sum(abs(Af(:,j)).^2);
+            DTF(i,j,n) = abs(Hf(i,j))^2 / sum(abs(Hf(i,:)).^2);
+        end
+    end
+end
+
+%% Phase-randomized surrogates
+PDCsurrogate = zeros(M,M,nFrequencyBins,B);
+DTFsurrogate = zeros(M,M,nFrequencyBins,B);
+
+for b = 1:B
+    % Randomizzazione indipendente delle fasi di ogni canale
+    xStar = zeros(M,N);
+
+    for channel = 1:M
+        originalMean = mean(x(channel,:));
+        Xf = fft(x(channel,:) - originalMean);
+
+        % Per N pari, gli indici 2:N/2 contengono le frequenze positive
+        % escluse la componente DC e la frequenza di Nyquist.
+        positiveBins = 2:N/2;
+        randomPhases = 2*pi*rand(1,length(positiveBins));
+
+        Xf(positiveBins) = Xf(positiveBins).*exp(1i*randomPhases);
+
+        % Simmetria coniugata per ottenere una serie temporale reale
+        negativeBins = N-positiveBins+2;
+        Xf(negativeBins) = conj(Xf(positiveBins));
+
+        xStar(channel,:) = real(ifft(Xf)) + originalMean;
+    end
+
+    % Stima del VAR sui dati surrogati
+    Ystar = xStar(:,p+1:N);
+    Zstar = [xStar(:,p:N-1); ...
+             xStar(:,p-1:N-2)];
+
+    Bstar = Ystar/Zstar;
+    A1star = Bstar(:,1:M);
+    A2star = Bstar(:,M+1:2*M);
+
+    % PDC e DTF del dataset surrogato
+    for n = 1:nFrequencyBins
+        f = frequency(n);
+
+        AfStar = eye(M) ...
+               - A1star*exp(-1i*2*pi*f*dt) ...
+               - A2star*exp(-1i*4*pi*f*dt);
+
+        HfStar = AfStar\eye(M);
+
+        for i = 1:M
+            for j = 1:M
+                PDCsurrogate(i,j,n,b) = abs(AfStar(i,j))^2 ...
+                    / sum(abs(AfStar(:,j)).^2);
+
+                DTFsurrogate(i,j,n,b) = abs(HfStar(i,j))^2 ...
+                    / sum(abs(HfStar(i,:)).^2);
+            end
+        end
+    end
+
+    if mod(b,20) == 0
+        fprintf(&quot;Surrogati completati: %d/%d\n&quot;,b,B);
+    end
+end
+
+%% Soglie puntuali al 95%
+sortedPDC = sort(PDCsurrogate,4);
+sortedDTF = sort(DTFsurrogate,4);
+thresholdIndex = ceil((1-alpha)*B);
+
+PDCthreshold = sortedPDC(:,:,:,thresholdIndex);
+DTFthreshold = sortedDTF(:,:,:,thresholdIndex);
+
+PDCsignificant = PDC &gt; PDCthreshold;
+DTFsignificant = DTF &gt; DTFthreshold;
+
+% La diagonale descrive le dinamiche interne, non connessioni tra nodi
+for i = 1:M
+    PDCsignificant(i,i,:) = false;
+    DTFsignificant(i,i,:) = false;
+end
+
+%% Grafico PDC osservata e soglia
+figure(&quot;Color&quot;,&quot;w&quot;);
+
+for i = 1:M
+    for j = 1:M
+        subplot(M,M,(i-1)*M+j);
+
+        if i == j
+            axis off;
+            continue;
+        end
+
+        plot(frequency,squeeze(PDC(i,j,:)),&quot;LineWidth&quot;,1.2);
+        hold on;
+        plot(frequency,squeeze(PDCthreshold(i,j,:)),&quot;k--&quot;);
+        hold off;
+        ylim([0,1]);
+        xlim([0,fs/2]);
+        grid on;
+        title(sprintf(&quot;%d \\rightarrow %d&quot;,j,i));
+    end
+end
+
+sgtitle(&quot;PDC^2 osservata e soglia surrogata&quot;);
+
+%% Grafico DTF osservata e soglia
+figure(&quot;Color&quot;,&quot;w&quot;);
+
+for i = 1:M
+    for j = 1:M
+        subplot(M,M,(i-1)*M+j);
+
+        if i == j
+            axis off;
+            continue;
+        end
+
+        plot(frequency,squeeze(DTF(i,j,:)),&quot;LineWidth&quot;,1.2);
+        hold on;
+        plot(frequency,squeeze(DTFthreshold(i,j,:)),&quot;k--&quot;);
+        hold off;
+        ylim([0,1]);
+        xlim([0,fs/2]);
+        grid on;
+        title(sprintf(&quot;%d \\rightarrow %d&quot;,j,i));
+    end
+end
+
+sgtitle(&quot;DTF^2 osservata e soglia surrogata&quot;);
+
+%% Solo valori significativi
+PDCsignificantValues = PDC;
+PDCsignificantValues(~PDCsignificant) = NaN;
+
+DTFsignificantValues = DTF;
+DTFsignificantValues(~DTFsignificant) = NaN;
+
+figure(&quot;Color&quot;,&quot;w&quot;);
+
+for i = 1:M
+    for j = 1:M
+        subplot(M,M,(i-1)*M+j);
+
+        if i == j
+            axis off;
+            continue;
+        end
+
+        plot(frequency,squeeze(PDCsignificantValues(i,j,:)), ...
+            &quot;r&quot;,&quot;LineWidth&quot;,1.5);
+        ylim([0,1]);
+        xlim([0,fs/2]);
+        grid on;
+        title(sprintf(&quot;%d \\rightarrow %d&quot;,j,i));
+    end
+end
+
+sgtitle(&quot;PDC^2 significativa, soglia puntuale&quot;);
+
+figure(&quot;Color&quot;,&quot;w&quot;);
+
+for i = 1:M
+    for j = 1:M
+        subplot(M,M,(i-1)*M+j);
+
+        if i == j
+            axis off;
+            continue;
+        end
+
+        plot(frequency,squeeze(DTFsignificantValues(i,j,:)), ...
+            &quot;r&quot;,&quot;LineWidth&quot;,1.5);
+        ylim([0,1]);
+        xlim([0,fs/2]);
+        grid on;
+        title(sprintf(&quot;%d \\rightarrow %d&quot;,j,i));
+    end
+end
+
+sgtitle(&quot;DTF^2 significativa, soglia puntuale&quot;);</code></pre></div><button title="Copy to Clipboard" class="inline-flex items-center opacity-0 group-hover:opacity-100 hover:opacity-100 focus:opacity-100 active:opacity-100 cursor-pointer ml-2 transition-color duration-200 ease-in-out text-myst-link-underline hover:text-myst-link-hover absolute right-1 myst-code-copy-icon top-1" aria-pressed="false" aria-label="Copy code to clipboard"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" width="24" height="24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75"></path></svg></button></div><div class="myst-backmatter-parts"></div><div class="myst-footer-links flex pt-10 mb-10 space-x-4"><a class="myst-footer-link flex-1 block p-4 font-normal text-myst-text-secondary no-underline border border-myst-border rounded shadow-sm group hover:border-myst-active hover:text-myst-active hover:shadow-lg myst-footer-link-prev" aria-label="Previous: Demo 50 - Bootstrap della GC sotto l’ipotesi nulla" href="/demo-50-bootstrap"><div class="flex h-full align-middle"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" width="1.5rem" height="1.5rem" class="myst-footer-link-icon self-center transition-transform group-hover:-translate-x-1 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"></path></svg><div class="flex-grow text-right"><div class="myst-footer-link-group text-xs text-myst-text-tertiary">Demo MATLAB</div>Demo 50 - Bootstrap della GC sotto l’ipotesi nulla</div></div></a><a class="myst-footer-link flex-1 block p-4 font-normal text-myst-text-secondary no-underline border border-myst-border rounded shadow-sm group hover:border-myst-active hover:text-myst-active hover:shadow-lg myst-footer-link-next" aria-label="Next: Esercitazione 1" href="/esercitazione-1"><div class="flex h-full align-middle"><div class="flex-grow"><div class="myst-footer-link-group text-xs text-myst-text-tertiary">Esercitazioni</div>Esercitazione 1</div><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-slot="icon" width="1.5rem" height="1.5rem" class="myst-footer-link-icon self-center transition-transform group-hover:translate-x-1 shrink-0"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"></path></svg></div></a></div></article></main><script>((a,s)=>{if(!window.history.state||!window.history.state.key){let l=Math.random().toString(32).slice(2);window.history.replaceState({key:l},"")}try{let u=JSON.parse(sessionStorage.getItem(a)||"{}")[s||window.history.state.key];typeof u=="number"&&window.scrollTo(0,u)}catch(l){console.error(l),sessionStorage.removeItem(a)}})("positions", null)</script><script>window.__remixContext = {"url":"/demo-51-surrogati-fase","state":{"loaderData":{"root":{"config":{"version":3,"myst":"1.7.0","options":{"logo_text":"VAR e causalità di Granger"},"nav":[],"actions":[],"projects":[{"title":"VAR e causalità di Granger","description":"Dispensa del corso Metodi per l'analisi di segnali multidimensionali","authors":[{"nameParsed":{"literal":"Alejandro Luis Callara","given":"Alejandro Luis","family":"Callara"},"name":"Alejandro Luis Callara","id":"contributors-myst-generated-uid-0"}],"github":"https://github.com/AlejandroCallara/mvar","id":"791b3a0c-6d4e-4cc9-94ad-51b01c25408d","toc":[{"file":"index.md"},{"file":"capitolo/var_causalita_granger.md"},{"children":[{"file":"demo/demo_45_validazione.md"},{"file":"demo/demo_47_snr.md"},{"file":"demo/demo_48_numerosita.md"},{"file":"demo/demo_49_ingresso_comune.md"},{"file":"demo/demo_50_bootstrap.md"},{"file":"demo/demo_51_surrogati_fase.md"}],"title":"Demo MATLAB"},{"children":[{"file":"esercitazioni/esercitazione_1.md"},{"file":"esercitazioni/esercitazione_2.md"}],"title":"Esercitazioni"},{"file":"bibliografia.md"}],"exports":[],"bibliography":[],"index":"index","pages":[{"slug":"var-causalita-granger","title":"VAR e causalità di Granger","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":1},{"level":1,"title":"Demo MATLAB"},{"slug":"demo-45-validazione","title":"Demo 45 - Validazione di un modello VAR","description":"","date":"","thumbnail":"/build/demo_45_01-872d920930c63e01d6f95d5a96909787.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-47-snr","title":"Demo 47 - SNR diverso tra i canali","description":"","date":"","thumbnail":"/build/demo_47_01-553de431b2d7e853e25aa63fe850d2fa.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-48-numerosita","title":"Demo 48 - Numerosità campionaria","description":"","date":"","thumbnail":"/build/demo_48_01-33b9103a72aa45adb8f8e2c86fbab6b2.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-49-ingresso-comune","title":"Demo 49 - Ingresso comune non osservato","description":"","date":"","thumbnail":"/build/demo_49_01-1b5e36d44c3179fce4ec01a13a288240.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-50-bootstrap","title":"Demo 50 - Bootstrap della GC sotto l’ipotesi nulla","description":"","date":"","thumbnail":"/build/demo_50_01-3e3b9d6dcff2d0f427bfceeffc2bfb69.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-51-surrogati-fase","title":"Demo 51 - PDC e DTF con surrogati a fase randomizzata","description":"","date":"","thumbnail":"/build/demo_51_01-b53ae986e0f09463cf4d2a4558a954f8.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"level":1,"title":"Esercitazioni"},{"slug":"esercitazione-1","title":"Esercitazione 1","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"esercitazione-2","title":"Esercitazione 2","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"bibliografia","title":"Bibliografia essenziale","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":1}]}]},"CONTENT_CDN_PORT":"3100","MODE":"static"},"routes/$":{"config":{"version":3,"myst":"1.7.0","options":{"logo_text":"VAR e causalità di Granger"},"nav":[],"actions":[],"projects":[{"title":"VAR e causalità di Granger","description":"Dispensa del corso Metodi per l'analisi di segnali multidimensionali","authors":[{"nameParsed":{"literal":"Alejandro Luis Callara","given":"Alejandro Luis","family":"Callara"},"name":"Alejandro Luis Callara","id":"contributors-myst-generated-uid-0"}],"github":"https://github.com/AlejandroCallara/mvar","id":"791b3a0c-6d4e-4cc9-94ad-51b01c25408d","toc":[{"file":"index.md"},{"file":"capitolo/var_causalita_granger.md"},{"children":[{"file":"demo/demo_45_validazione.md"},{"file":"demo/demo_47_snr.md"},{"file":"demo/demo_48_numerosita.md"},{"file":"demo/demo_49_ingresso_comune.md"},{"file":"demo/demo_50_bootstrap.md"},{"file":"demo/demo_51_surrogati_fase.md"}],"title":"Demo MATLAB"},{"children":[{"file":"esercitazioni/esercitazione_1.md"},{"file":"esercitazioni/esercitazione_2.md"}],"title":"Esercitazioni"},{"file":"bibliografia.md"}],"exports":[],"bibliography":[],"index":"index","pages":[{"slug":"var-causalita-granger","title":"VAR e causalità di Granger","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":1},{"level":1,"title":"Demo MATLAB"},{"slug":"demo-45-validazione","title":"Demo 45 - Validazione di un modello VAR","description":"","date":"","thumbnail":"/build/demo_45_01-872d920930c63e01d6f95d5a96909787.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-47-snr","title":"Demo 47 - SNR diverso tra i canali","description":"","date":"","thumbnail":"/build/demo_47_01-553de431b2d7e853e25aa63fe850d2fa.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-48-numerosita","title":"Demo 48 - Numerosità campionaria","description":"","date":"","thumbnail":"/build/demo_48_01-33b9103a72aa45adb8f8e2c86fbab6b2.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-49-ingresso-comune","title":"Demo 49 - Ingresso comune non osservato","description":"","date":"","thumbnail":"/build/demo_49_01-1b5e36d44c3179fce4ec01a13a288240.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-50-bootstrap","title":"Demo 50 - Bootstrap della GC sotto l’ipotesi nulla","description":"","date":"","thumbnail":"/build/demo_50_01-3e3b9d6dcff2d0f427bfceeffc2bfb69.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-51-surrogati-fase","title":"Demo 51 - PDC e DTF con surrogati a fase randomizzata","description":"","date":"","thumbnail":"/build/demo_51_01-b53ae986e0f09463cf4d2a4558a954f8.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"level":1,"title":"Esercitazioni"},{"slug":"esercitazione-1","title":"Esercitazione 1","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"esercitazione-2","title":"Esercitazione 2","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"bibliografia","title":"Bibliografia essenziale","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":1}]}]},"page":{"version":3,"kind":"Article","sha256":"4e2c003d4d8418c7b0ec4218bd554df77a1e4c47588958b9fe896d337708cb66","slug":"demo-51-surrogati-fase","location":"/demo/demo_51_surrogati_fase.md","dependencies":[],"frontmatter":{"title":"Demo 51 - PDC e DTF con surrogati a fase randomizzata","content_includes_title":false,"authors":[{"nameParsed":{"literal":"Alejandro Luis Callara","given":"Alejandro Luis","family":"Callara"},"name":"Alejandro Luis Callara","id":"contributors-myst-generated-uid-0"}],"github":"https://github.com/AlejandroCallara/mvar","numbering":{"title":{"offset":1}},"thumbnail":"/build/demo_51_01-b53ae986e0f09463cf4d2a4558a954f8.png","exports":[{"format":"md","filename":"demo_51_surrogati_fase.md","url":"/build/demo_51_surrogati_fa-1cb2f32d947989077196b0eda5536406.md"}]},"mdast":{"type":"root","children":[{"type":"block","children":[{"type":"heading","depth":2,"position":{"start":{"line":3,"column":1},"end":{"line":3,"column":1}},"children":[{"type":"text","value":"Scopo","position":{"start":{"line":3,"column":1},"end":{"line":3,"column":1}},"key":"N768HKlYOD"}],"identifier":"scopo","label":"Scopo","html_id":"scopo","implicit":true,"key":"bvUptAjJew"},{"type":"paragraph","position":{"start":{"line":5,"column":1},"end":{"line":5,"column":1}},"children":[{"type":"text","value":"La demo conserva lo spettro di potenza di ciascun canale e randomizza indipendentemente le fasi. Per ogni surrogato ristima il VAR(2) e costruisce soglie puntuali per PDC e DTF.","position":{"start":{"line":5,"column":1},"end":{"line":5,"column":1}},"key":"Mqc3O5ELWU"}],"key":"pCoJg1bXwf"},{"type":"heading","depth":2,"position":{"start":{"line":7,"column":1},"end":{"line":7,"column":1}},"children":[{"type":"text","value":"Risultati attesi","position":{"start":{"line":7,"column":1},"end":{"line":7,"column":1}},"key":"b3J0UG2bGa"}],"identifier":"risultati-attesi","label":"Risultati attesi","html_id":"risultati-attesi","implicit":true,"key":"cs4MMXNlVb"},{"type":"list","ordered":false,"spread":false,"position":{"start":{"line":9,"column":1},"end":{"line":12,"column":1}},"children":[{"type":"listItem","spread":true,"position":{"start":{"line":9,"column":1},"end":{"line":9,"column":1}},"children":[{"type":"paragraph","children":[{"type":"text","value":"le connessioni coerenti con la struttura simulata superano la soglia in bande specifiche;","position":{"start":{"line":9,"column":1},"end":{"line":9,"column":1}},"key":"l48Hd9RJAQ"}],"key":"YUwKSfGUZL"}],"key":"MqcNwCOLV0"},{"type":"listItem","spread":true,"position":{"start":{"line":10,"column":1},"end":{"line":10,"column":1}},"children":[{"type":"paragraph","children":[{"type":"text","value":"la DTF può mostrare propagazioni indirette che la PDC attenua;","position":{"start":{"line":10,"column":1},"end":{"line":10,"column":1}},"key":"WEnw7wTDUX"}],"key":"Q3whkXRS9V"}],"key":"ebjkntponM"},{"type":"listItem","spread":true,"position":{"start":{"line":11,"column":1},"end":{"line":12,"column":1}},"children":[{"type":"paragraph","children":[{"type":"text","value":"le soglie al 95% sono puntuali e non controllano da sole tutti i confronti multipli.","position":{"start":{"line":11,"column":1},"end":{"line":11,"column":1}},"key":"khFqgodmfc"}],"key":"nxDDg7Tviy"}],"key":"d2uu1ub1xQ"}],"key":"G6wOgFst13"},{"type":"paragraph","position":{"start":{"line":13,"column":1},"end":{"line":13,"column":1}},"children":[{"type":"text","value":"I valori numerici cambiano con le realizzazioni casuali. Lo script imposta il generatore quando è necessario per rendere il confronto riproducibile.","position":{"start":{"line":13,"column":1},"end":{"line":13,"column":1}},"key":"tOFisZFmdG"}],"key":"c6PFw0aUma"},{"type":"heading","depth":2,"position":{"start":{"line":15,"column":1},"end":{"line":15,"column":1}},"children":[{"type":"text","value":"Output verificato","position":{"start":{"line":15,"column":1},"end":{"line":15,"column":1}},"key":"OVf9YczxE5"}],"identifier":"output-verificato","label":"Output verificato","html_id":"output-verificato","implicit":true,"key":"DOX1V98aDj"},{"type":"image","url":"/build/demo_51_01-b53ae986e0f09463cf4d2a4558a954f8.png","alt":"Output MATLAB di Demo 51 - PDC e DTF con surrogati a fase randomizzata","position":{"start":{"line":17,"column":1},"end":{"line":17,"column":1}},"key":"pYyeMkNj2q","urlSource":"../assets/demo/demo_51_01.png"},{"type":"image","url":"/build/demo_51_02-0bd045a641c4c7592e10c215c899d5c1.png","alt":"Output MATLAB di Demo 51 - PDC e DTF con surrogati a fase randomizzata","position":{"start":{"line":19,"column":1},"end":{"line":19,"column":1}},"key":"hBSeStOsKx","urlSource":"../assets/demo/demo_51_02.png"},{"type":"image","url":"/build/demo_51_03-a73b0c9537e7214098d053bd64e708a3.png","alt":"Output MATLAB di Demo 51 - PDC e DTF con surrogati a fase randomizzata","position":{"start":{"line":21,"column":1},"end":{"line":21,"column":1}},"key":"f6P4FDX2a4","urlSource":"../assets/demo/demo_51_03.png"},{"type":"image","url":"/build/demo_51_04-4aeb7889d7173e850d7b0dd77f78d26b.png","alt":"Output MATLAB di Demo 51 - PDC e DTF con surrogati a fase randomizzata","position":{"start":{"line":23,"column":1},"end":{"line":23,"column":1}},"key":"LrFsXBL4oF","urlSource":"../assets/demo/demo_51_04.png"},{"type":"heading","depth":2,"position":{"start":{"line":25,"column":1},"end":{"line":25,"column":1}},"children":[{"type":"text","value":"Esecuzione","position":{"start":{"line":25,"column":1},"end":{"line":25,"column":1}},"key":"zRpOSsln7S"}],"identifier":"esecuzione","label":"Esecuzione","html_id":"esecuzione","implicit":true,"key":"qIaSRiW8SZ"},{"type":"paragraph","position":{"start":{"line":27,"column":1},"end":{"line":27,"column":1}},"children":[{"type":"text","value":"Scaricare ","position":{"start":{"line":27,"column":1},"end":{"line":27,"column":1}},"key":"HUe0YubZpo"},{"type":"link","url":"/build/Demo_51_PDC_DTF_phas-063afbd64f7324064afaee96dd824dcc.m","position":{"start":{"line":27,"column":1},"end":{"line":27,"column":1}},"children":[{"type":"text","value":"Demo​_51​_PDC​_DTF​_phase​_surrogates.m","position":{"start":{"line":27,"column":1},"end":{"line":27,"column":1}},"key":"Uh9CXgSWFq"}],"urlSource":"../matlab/Demo_51_PDC_DTF_phase_surrogates.m","static":true,"protocol":"file","key":"yyKxOCAIV3"},{"type":"text","value":", aprirlo in MATLAB ed eseguirlo per sezioni oppure integralmente. Gli script sono stati verificati con MATLAB R2025b.","position":{"start":{"line":27,"column":1},"end":{"line":27,"column":1}},"key":"tns97251VW"}],"key":"RdReB1Ditx"},{"type":"heading","depth":2,"position":{"start":{"line":29,"column":1},"end":{"line":29,"column":1}},"children":[{"type":"text","value":"Codice MATLAB","position":{"start":{"line":29,"column":1},"end":{"line":29,"column":1}},"key":"LZQ6L6yXNP"}],"identifier":"codice-matlab","label":"Codice MATLAB","html_id":"codice-matlab","implicit":true,"key":"BgmuKvfI93"},{"type":"code","lang":"matlab","value":"%% DEMO 2 - SIGNIFICATIVITA DI PDC E DTF CON PHASE RANDOMIZATION\n% Tutti i passaggi sono svolti direttamente nello script.\n%\n% Convenzione: misura(i,j,f) rappresenta la direzione j -\u003e i.\n\nclearvars;\nclose all;\nclc;\n\nrng(11);\n\n%% Parametri\nM = 4;\np = 2;\nN = 1000;\nburnIn = 500;\ndt = 1;\nfs = 1/dt;\n\nB = 200;                 % Aumentare a 1000 per l'analisi finale\nalpha = 0.05;\nnFrequencyBins = 128;\nfrequency = linspace(0,fs/2,nFrequencyBins);\n\nrho = 0.9;\nf1 = 0.1;\nf3 = 0.3;\nSigma = eye(M);\n\n%% Definizione del VAR(2)\nA = zeros(M,M,p);\n\n% x1: oscillatore a 0.1 Hz\nA(1,1,1) = 2*rho*cos(2*pi*f1);\nA(1,1,2) = -rho^2;\n\n% Connessioni 1 -\u003e 2 e 3 -\u003e 2\nA(2,1,1) = 1;\nA(2,3,1) = 0.5;\n\n% x3: oscillatore a 0.3 Hz e connessione 2 -\u003e 3\nA(3,3,1) = 2*rho*cos(2*pi*f3);\nA(3,3,2) = -rho^2;\nA(3,2,1) = 0.5;\nA(3,2,2) = 0.5;\n\n% Connessione 1 -\u003e 4\nA(4,1,2) = 1;\n\n%% Simulazione\nnTotal = N + burnIn + p;\nu = chol(Sigma,\"lower\") * randn(M,nTotal);\nx = zeros(M,nTotal);\nx(:,1:p) = randn(M,p);\n\nfor t = p+1:nTotal\n    x(:,t) = A(:,:,1)*x(:,t-1) ...\n           + A(:,:,2)*x(:,t-2) ...\n           + u(:,t);\nend\n\nx = x(:,burnIn+p+1:end);\n\n%% Stima del VAR(2)\nY = x(:,p+1:N);\nZ = [x(:,p:N-1); ...\n     x(:,p-1:N-2)];\n\nBhat = Y/Z;\nA1hat = Bhat(:,1:M);\nA2hat = Bhat(:,M+1:2*M);\n\n%% PDC e DTF osservate\nPDC = zeros(M,M,nFrequencyBins);\nDTF = zeros(M,M,nFrequencyBins);\n\nfor n = 1:nFrequencyBins\n    f = frequency(n);\n\n    Af = eye(M) ...\n       - A1hat*exp(-1i*2*pi*f*dt) ...\n       - A2hat*exp(-1i*4*pi*f*dt);\n\n    Hf = Af\\eye(M);\n\n    for i = 1:M\n        for j = 1:M\n            PDC(i,j,n) = abs(Af(i,j))^2 / sum(abs(Af(:,j)).^2);\n            DTF(i,j,n) = abs(Hf(i,j))^2 / sum(abs(Hf(i,:)).^2);\n        end\n    end\nend\n\n%% Phase-randomized surrogates\nPDCsurrogate = zeros(M,M,nFrequencyBins,B);\nDTFsurrogate = zeros(M,M,nFrequencyBins,B);\n\nfor b = 1:B\n    % Randomizzazione indipendente delle fasi di ogni canale\n    xStar = zeros(M,N);\n\n    for channel = 1:M\n        originalMean = mean(x(channel,:));\n        Xf = fft(x(channel,:) - originalMean);\n\n        % Per N pari, gli indici 2:N/2 contengono le frequenze positive\n        % escluse la componente DC e la frequenza di Nyquist.\n        positiveBins = 2:N/2;\n        randomPhases = 2*pi*rand(1,length(positiveBins));\n\n        Xf(positiveBins) = Xf(positiveBins).*exp(1i*randomPhases);\n\n        % Simmetria coniugata per ottenere una serie temporale reale\n        negativeBins = N-positiveBins+2;\n        Xf(negativeBins) = conj(Xf(positiveBins));\n\n        xStar(channel,:) = real(ifft(Xf)) + originalMean;\n    end\n\n    % Stima del VAR sui dati surrogati\n    Ystar = xStar(:,p+1:N);\n    Zstar = [xStar(:,p:N-1); ...\n             xStar(:,p-1:N-2)];\n\n    Bstar = Ystar/Zstar;\n    A1star = Bstar(:,1:M);\n    A2star = Bstar(:,M+1:2*M);\n\n    % PDC e DTF del dataset surrogato\n    for n = 1:nFrequencyBins\n        f = frequency(n);\n\n        AfStar = eye(M) ...\n               - A1star*exp(-1i*2*pi*f*dt) ...\n               - A2star*exp(-1i*4*pi*f*dt);\n\n        HfStar = AfStar\\eye(M);\n\n        for i = 1:M\n            for j = 1:M\n                PDCsurrogate(i,j,n,b) = abs(AfStar(i,j))^2 ...\n                    / sum(abs(AfStar(:,j)).^2);\n\n                DTFsurrogate(i,j,n,b) = abs(HfStar(i,j))^2 ...\n                    / sum(abs(HfStar(i,:)).^2);\n            end\n        end\n    end\n\n    if mod(b,20) == 0\n        fprintf(\"Surrogati completati: %d/%d\\n\",b,B);\n    end\nend\n\n%% Soglie puntuali al 95%\nsortedPDC = sort(PDCsurrogate,4);\nsortedDTF = sort(DTFsurrogate,4);\nthresholdIndex = ceil((1-alpha)*B);\n\nPDCthreshold = sortedPDC(:,:,:,thresholdIndex);\nDTFthreshold = sortedDTF(:,:,:,thresholdIndex);\n\nPDCsignificant = PDC \u003e PDCthreshold;\nDTFsignificant = DTF \u003e DTFthreshold;\n\n% La diagonale descrive le dinamiche interne, non connessioni tra nodi\nfor i = 1:M\n    PDCsignificant(i,i,:) = false;\n    DTFsignificant(i,i,:) = false;\nend\n\n%% Grafico PDC osservata e soglia\nfigure(\"Color\",\"w\");\n\nfor i = 1:M\n    for j = 1:M\n        subplot(M,M,(i-1)*M+j);\n\n        if i == j\n            axis off;\n            continue;\n        end\n\n        plot(frequency,squeeze(PDC(i,j,:)),\"LineWidth\",1.2);\n        hold on;\n        plot(frequency,squeeze(PDCthreshold(i,j,:)),\"k--\");\n        hold off;\n        ylim([0,1]);\n        xlim([0,fs/2]);\n        grid on;\n        title(sprintf(\"%d \\\\rightarrow %d\",j,i));\n    end\nend\n\nsgtitle(\"PDC^2 osservata e soglia surrogata\");\n\n%% Grafico DTF osservata e soglia\nfigure(\"Color\",\"w\");\n\nfor i = 1:M\n    for j = 1:M\n        subplot(M,M,(i-1)*M+j);\n\n        if i == j\n            axis off;\n            continue;\n        end\n\n        plot(frequency,squeeze(DTF(i,j,:)),\"LineWidth\",1.2);\n        hold on;\n        plot(frequency,squeeze(DTFthreshold(i,j,:)),\"k--\");\n        hold off;\n        ylim([0,1]);\n        xlim([0,fs/2]);\n        grid on;\n        title(sprintf(\"%d \\\\rightarrow %d\",j,i));\n    end\nend\n\nsgtitle(\"DTF^2 osservata e soglia surrogata\");\n\n%% Solo valori significativi\nPDCsignificantValues = PDC;\nPDCsignificantValues(~PDCsignificant) = NaN;\n\nDTFsignificantValues = DTF;\nDTFsignificantValues(~DTFsignificant) = NaN;\n\nfigure(\"Color\",\"w\");\n\nfor i = 1:M\n    for j = 1:M\n        subplot(M,M,(i-1)*M+j);\n\n        if i == j\n            axis off;\n            continue;\n        end\n\n        plot(frequency,squeeze(PDCsignificantValues(i,j,:)), ...\n            \"r\",\"LineWidth\",1.5);\n        ylim([0,1]);\n        xlim([0,fs/2]);\n        grid on;\n        title(sprintf(\"%d \\\\rightarrow %d\",j,i));\n    end\nend\n\nsgtitle(\"PDC^2 significativa, soglia puntuale\");\n\nfigure(\"Color\",\"w\");\n\nfor i = 1:M\n    for j = 1:M\n        subplot(M,M,(i-1)*M+j);\n\n        if i == j\n            axis off;\n            continue;\n        end\n\n        plot(frequency,squeeze(DTFsignificantValues(i,j,:)), ...\n            \"r\",\"LineWidth\",1.5);\n        ylim([0,1]);\n        xlim([0,fs/2]);\n        grid on;\n        title(sprintf(\"%d \\\\rightarrow %d\",j,i));\n    end\nend\n\nsgtitle(\"DTF^2 significativa, soglia puntuale\");","position":{"start":{"line":31,"column":1},"end":{"line":303,"column":1}},"key":"Ymkrzs0yx8"}],"key":"a90UjWnatM"}],"key":"Iod6blr7Wa"},"references":{"cite":{"order":[],"data":{}}},"footer":{"navigation":{"prev":{"title":"Demo 50 - Bootstrap della GC sotto l’ipotesi nulla","url":"/demo-50-bootstrap","group":"Demo MATLAB"},"next":{"title":"Esercitazione 1","url":"/esercitazione-1","group":"Esercitazioni"}}},"domain":"http://localhost:3000"},"project":{"title":"VAR e causalità di Granger","description":"Dispensa del corso Metodi per l'analisi di segnali multidimensionali","authors":[{"nameParsed":{"literal":"Alejandro Luis Callara","given":"Alejandro Luis","family":"Callara"},"name":"Alejandro Luis Callara","id":"contributors-myst-generated-uid-0"}],"github":"https://github.com/AlejandroCallara/mvar","id":"791b3a0c-6d4e-4cc9-94ad-51b01c25408d","toc":[{"file":"index.md"},{"file":"capitolo/var_causalita_granger.md"},{"children":[{"file":"demo/demo_45_validazione.md"},{"file":"demo/demo_47_snr.md"},{"file":"demo/demo_48_numerosita.md"},{"file":"demo/demo_49_ingresso_comune.md"},{"file":"demo/demo_50_bootstrap.md"},{"file":"demo/demo_51_surrogati_fase.md"}],"title":"Demo MATLAB"},{"children":[{"file":"esercitazioni/esercitazione_1.md"},{"file":"esercitazioni/esercitazione_2.md"}],"title":"Esercitazioni"},{"file":"bibliografia.md"}],"exports":[],"bibliography":[],"index":"index","pages":[{"slug":"var-causalita-granger","title":"VAR e causalità di Granger","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":1},{"level":1,"title":"Demo MATLAB"},{"slug":"demo-45-validazione","title":"Demo 45 - Validazione di un modello VAR","description":"","date":"","thumbnail":"/build/demo_45_01-872d920930c63e01d6f95d5a96909787.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-47-snr","title":"Demo 47 - SNR diverso tra i canali","description":"","date":"","thumbnail":"/build/demo_47_01-553de431b2d7e853e25aa63fe850d2fa.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-48-numerosita","title":"Demo 48 - Numerosità campionaria","description":"","date":"","thumbnail":"/build/demo_48_01-33b9103a72aa45adb8f8e2c86fbab6b2.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-49-ingresso-comune","title":"Demo 49 - Ingresso comune non osservato","description":"","date":"","thumbnail":"/build/demo_49_01-1b5e36d44c3179fce4ec01a13a288240.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-50-bootstrap","title":"Demo 50 - Bootstrap della GC sotto l’ipotesi nulla","description":"","date":"","thumbnail":"/build/demo_50_01-3e3b9d6dcff2d0f427bfceeffc2bfb69.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"demo-51-surrogati-fase","title":"Demo 51 - PDC e DTF con surrogati a fase randomizzata","description":"","date":"","thumbnail":"/build/demo_51_01-b53ae986e0f09463cf4d2a4558a954f8.png","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"level":1,"title":"Esercitazioni"},{"slug":"esercitazione-1","title":"Esercitazione 1","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"esercitazione-2","title":"Esercitazione 2","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":2},{"slug":"bibliografia","title":"Bibliografia essenziale","description":"","date":"","thumbnail":"","thumbnailOptimized":"","banner":"","bannerOptimized":"","tags":[],"level":1}]}}},"actionData":null,"errors":null},"future":{"unstable_dev":false,"unstable_postcss":false,"unstable_tailwind":false,"v2_errorBoundary":true,"v2_headers":true,"v2_meta":true,"v2_normalizeFormMethod":true,"v2_routeConvention":true}};</script><script type="module" async="">import "/build/manifest-0F78CC2B.js";
+import * as route0 from "/build/root-C5CK33H3.js";
+import * as route1 from "/build/routes/$-6ALOT4PW.js";
+window.__remixRouteModules = {"root":route0,"routes/$":route1};
+
+import("/build/entry.client-NNNALS5X.js");</script></body></html>

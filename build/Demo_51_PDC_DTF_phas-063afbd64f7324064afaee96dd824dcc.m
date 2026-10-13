@@ -1,0 +1,271 @@
+%% DEMO 2 - SIGNIFICATIVITA DI PDC E DTF CON PHASE RANDOMIZATION
+% Tutti i passaggi sono svolti direttamente nello script.
+%
+% Convenzione: misura(i,j,f) rappresenta la direzione j -> i.
+
+clearvars;
+close all;
+clc;
+
+rng(11);
+
+%% Parametri
+M = 4;
+p = 2;
+N = 1000;
+burnIn = 500;
+dt = 1;
+fs = 1/dt;
+
+B = 200;                 % Aumentare a 1000 per l'analisi finale
+alpha = 0.05;
+nFrequencyBins = 128;
+frequency = linspace(0,fs/2,nFrequencyBins);
+
+rho = 0.9;
+f1 = 0.1;
+f3 = 0.3;
+Sigma = eye(M);
+
+%% Definizione del VAR(2)
+A = zeros(M,M,p);
+
+% x1: oscillatore a 0.1 Hz
+A(1,1,1) = 2*rho*cos(2*pi*f1);
+A(1,1,2) = -rho^2;
+
+% Connessioni 1 -> 2 e 3 -> 2
+A(2,1,1) = 1;
+A(2,3,1) = 0.5;
+
+% x3: oscillatore a 0.3 Hz e connessione 2 -> 3
+A(3,3,1) = 2*rho*cos(2*pi*f3);
+A(3,3,2) = -rho^2;
+A(3,2,1) = 0.5;
+A(3,2,2) = 0.5;
+
+% Connessione 1 -> 4
+A(4,1,2) = 1;
+
+%% Simulazione
+nTotal = N + burnIn + p;
+u = chol(Sigma,"lower") * randn(M,nTotal);
+x = zeros(M,nTotal);
+x(:,1:p) = randn(M,p);
+
+for t = p+1:nTotal
+    x(:,t) = A(:,:,1)*x(:,t-1) ...
+           + A(:,:,2)*x(:,t-2) ...
+           + u(:,t);
+end
+
+x = x(:,burnIn+p+1:end);
+
+%% Stima del VAR(2)
+Y = x(:,p+1:N);
+Z = [x(:,p:N-1); ...
+     x(:,p-1:N-2)];
+
+Bhat = Y/Z;
+A1hat = Bhat(:,1:M);
+A2hat = Bhat(:,M+1:2*M);
+
+%% PDC e DTF osservate
+PDC = zeros(M,M,nFrequencyBins);
+DTF = zeros(M,M,nFrequencyBins);
+
+for n = 1:nFrequencyBins
+    f = frequency(n);
+
+    Af = eye(M) ...
+       - A1hat*exp(-1i*2*pi*f*dt) ...
+       - A2hat*exp(-1i*4*pi*f*dt);
+
+    Hf = Af\eye(M);
+
+    for i = 1:M
+        for j = 1:M
+            PDC(i,j,n) = abs(Af(i,j))^2 / sum(abs(Af(:,j)).^2);
+            DTF(i,j,n) = abs(Hf(i,j))^2 / sum(abs(Hf(i,:)).^2);
+        end
+    end
+end
+
+%% Phase-randomized surrogates
+PDCsurrogate = zeros(M,M,nFrequencyBins,B);
+DTFsurrogate = zeros(M,M,nFrequencyBins,B);
+
+for b = 1:B
+    % Randomizzazione indipendente delle fasi di ogni canale
+    xStar = zeros(M,N);
+
+    for channel = 1:M
+        originalMean = mean(x(channel,:));
+        Xf = fft(x(channel,:) - originalMean);
+
+        % Per N pari, gli indici 2:N/2 contengono le frequenze positive
+        % escluse la componente DC e la frequenza di Nyquist.
+        positiveBins = 2:N/2;
+        randomPhases = 2*pi*rand(1,length(positiveBins));
+
+        Xf(positiveBins) = Xf(positiveBins).*exp(1i*randomPhases);
+
+        % Simmetria coniugata per ottenere una serie temporale reale
+        negativeBins = N-positiveBins+2;
+        Xf(negativeBins) = conj(Xf(positiveBins));
+
+        xStar(channel,:) = real(ifft(Xf)) + originalMean;
+    end
+
+    % Stima del VAR sui dati surrogati
+    Ystar = xStar(:,p+1:N);
+    Zstar = [xStar(:,p:N-1); ...
+             xStar(:,p-1:N-2)];
+
+    Bstar = Ystar/Zstar;
+    A1star = Bstar(:,1:M);
+    A2star = Bstar(:,M+1:2*M);
+
+    % PDC e DTF del dataset surrogato
+    for n = 1:nFrequencyBins
+        f = frequency(n);
+
+        AfStar = eye(M) ...
+               - A1star*exp(-1i*2*pi*f*dt) ...
+               - A2star*exp(-1i*4*pi*f*dt);
+
+        HfStar = AfStar\eye(M);
+
+        for i = 1:M
+            for j = 1:M
+                PDCsurrogate(i,j,n,b) = abs(AfStar(i,j))^2 ...
+                    / sum(abs(AfStar(:,j)).^2);
+
+                DTFsurrogate(i,j,n,b) = abs(HfStar(i,j))^2 ...
+                    / sum(abs(HfStar(i,:)).^2);
+            end
+        end
+    end
+
+    if mod(b,20) == 0
+        fprintf("Surrogati completati: %d/%d\n",b,B);
+    end
+end
+
+%% Soglie puntuali al 95%
+sortedPDC = sort(PDCsurrogate,4);
+sortedDTF = sort(DTFsurrogate,4);
+thresholdIndex = ceil((1-alpha)*B);
+
+PDCthreshold = sortedPDC(:,:,:,thresholdIndex);
+DTFthreshold = sortedDTF(:,:,:,thresholdIndex);
+
+PDCsignificant = PDC > PDCthreshold;
+DTFsignificant = DTF > DTFthreshold;
+
+% La diagonale descrive le dinamiche interne, non connessioni tra nodi
+for i = 1:M
+    PDCsignificant(i,i,:) = false;
+    DTFsignificant(i,i,:) = false;
+end
+
+%% Grafico PDC osservata e soglia
+figure("Color","w");
+
+for i = 1:M
+    for j = 1:M
+        subplot(M,M,(i-1)*M+j);
+
+        if i == j
+            axis off;
+            continue;
+        end
+
+        plot(frequency,squeeze(PDC(i,j,:)),"LineWidth",1.2);
+        hold on;
+        plot(frequency,squeeze(PDCthreshold(i,j,:)),"k--");
+        hold off;
+        ylim([0,1]);
+        xlim([0,fs/2]);
+        grid on;
+        title(sprintf("%d \\rightarrow %d",j,i));
+    end
+end
+
+sgtitle("PDC^2 osservata e soglia surrogata");
+
+%% Grafico DTF osservata e soglia
+figure("Color","w");
+
+for i = 1:M
+    for j = 1:M
+        subplot(M,M,(i-1)*M+j);
+
+        if i == j
+            axis off;
+            continue;
+        end
+
+        plot(frequency,squeeze(DTF(i,j,:)),"LineWidth",1.2);
+        hold on;
+        plot(frequency,squeeze(DTFthreshold(i,j,:)),"k--");
+        hold off;
+        ylim([0,1]);
+        xlim([0,fs/2]);
+        grid on;
+        title(sprintf("%d \\rightarrow %d",j,i));
+    end
+end
+
+sgtitle("DTF^2 osservata e soglia surrogata");
+
+%% Solo valori significativi
+PDCsignificantValues = PDC;
+PDCsignificantValues(~PDCsignificant) = NaN;
+
+DTFsignificantValues = DTF;
+DTFsignificantValues(~DTFsignificant) = NaN;
+
+figure("Color","w");
+
+for i = 1:M
+    for j = 1:M
+        subplot(M,M,(i-1)*M+j);
+
+        if i == j
+            axis off;
+            continue;
+        end
+
+        plot(frequency,squeeze(PDCsignificantValues(i,j,:)), ...
+            "r","LineWidth",1.5);
+        ylim([0,1]);
+        xlim([0,fs/2]);
+        grid on;
+        title(sprintf("%d \\rightarrow %d",j,i));
+    end
+end
+
+sgtitle("PDC^2 significativa, soglia puntuale");
+
+figure("Color","w");
+
+for i = 1:M
+    for j = 1:M
+        subplot(M,M,(i-1)*M+j);
+
+        if i == j
+            axis off;
+            continue;
+        end
+
+        plot(frequency,squeeze(DTFsignificantValues(i,j,:)), ...
+            "r","LineWidth",1.5);
+        ylim([0,1]);
+        xlim([0,fs/2]);
+        grid on;
+        title(sprintf("%d \\rightarrow %d",j,i));
+    end
+end
+
+sgtitle("DTF^2 significativa, soglia puntuale");
