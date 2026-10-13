@@ -1,5 +1,11 @@
 # Demo 48 - Numerosità campionaria
 
+## Materiale originale
+
+Questa demo riprende gli esempi e le cautele interpretative presentati in:
+
+Bastos, A. M., & Schoffelen, J.-M. (2016). A tutorial review of functional connectivity analysis methods and their interpretational pitfalls. *Frontiers in Systems Neuroscience*, 9, 175.
+
 ## Scopo
 
 Una simulazione Monte Carlo stima la GC usando un numero crescente di epoche. Serve a distinguere la struttura reale della rete dall'incertezza introdotta da campioni insufficienti.

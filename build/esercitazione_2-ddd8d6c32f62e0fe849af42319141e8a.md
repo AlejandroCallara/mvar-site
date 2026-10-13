@@ -101,23 +101,9 @@ $$
 
     e confrontare PDC e gPDC.
 
-## Indicazioni MATLAB
+## Modalità di lavoro
 
-Evitare `inv` quando è possibile risolvere un sistema lineare:
-
-```matlab
-Bhat = Y / Z;
-Hf(:,:,n) = Af(:,:,n) \ eye(M);
-```
-
-Preallocare gli array complessi:
-
-```matlab
-Af = complex(zeros(M, M, nFrequencyBins));
-Hf = complex(zeros(M, M, nFrequencyBins));
-```
-
-Lo script completo fornito con il corso è scaricabile qui: [Hands_on_2_PDC_DTF.m](../matlab/Hands_on_2_PDC_DTF.m).
+Scrivere autonomamente uno script MATLAB che svolga nell'ordine le attività richieste. Il codice di partenza e la soluzione non sono forniti in questa versione della dispensa. Motivare nel codice o nella relazione le scelte relative a simulazione, stima congiunta, griglia delle frequenze, normalizzazione delle misure e rappresentazione grafica.
 
 ## Domande per la relazione
 

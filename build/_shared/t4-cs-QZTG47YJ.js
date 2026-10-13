@@ -1,1 +1,1 @@
-import{a}from"/build/_shared/chunk-WEQWCJAS.js";import"/build/_shared/chunk-NFGD4Z3L.js";import"/build/_shared/chunk-DEQLTPBL.js";import"/build/_shared/chunk-RAQ24GF6.js";export default a();
+import{a}from"/mvar-site/build/_shared/chunk-WEQWCJAS.js";import"/mvar-site/build/_shared/chunk-NFGD4Z3L.js";import"/mvar-site/build/_shared/chunk-DEQLTPBL.js";import"/mvar-site/build/_shared/chunk-RAQ24GF6.js";export default a();

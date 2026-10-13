@@ -1,5 +1,11 @@
 # Demo 49 - Ingresso comune non osservato
 
+## Materiale originale
+
+Questa demo riprende gli esempi e le cautele interpretative presentati in:
+
+Bastos, A. M., & Schoffelen, J.-M. (2016). A tutorial review of functional connectivity analysis methods and their interpretational pitfalls. *Frontiers in Systems Neuroscience*, 9, 175.
+
 ## Scopo
 
 La demo simula una sorgente latente che raggiunge due nodi con ritardi diversi. L'analisi bivariata produce una connessione apparente; il modello trivariato può condizionare sulla sorgente comune.
