@@ -610,13 +610,6 @@ Si stima un VAR indipendente in ogni finestra. Il metodo è trasparente, ma assu
 La lunghezza della finestra determina il compromesso tra risoluzione temporale e affidabilità della stima. Schema tratto dalla presentazione del corso.
 ```
 
-```{figure} ../assets/figures/var_finestre_scorrevoli.png
-:alt: Stima VAR su prove multiple mediante finestre scorrevoli
-:width: 90%
-:name: fig-var-finestre-scorrevoli
-
-Esempio concettuale di stima VAR locale su prove multiple mediante una finestra che scorre nel tempo. Schema tratto dalla presentazione del corso.
-```
 
 ### 15.2 Recursive Least Squares
 
