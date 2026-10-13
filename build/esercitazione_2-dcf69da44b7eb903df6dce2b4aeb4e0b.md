@@ -105,6 +105,14 @@ $$
 
 Scrivere autonomamente uno script MATLAB che svolga nell'ordine le attività richieste. Il codice di partenza e la soluzione non sono forniti in questa versione della dispensa. Motivare nel codice o nella relazione le scelte relative a simulazione, stima congiunta, griglia delle frequenze, normalizzazione delle misure e rappresentazione grafica.
 
+## Codice MATLAB da condividere
+
+In questo spazio verrà inserito il solo frammento di codice MATLAB che sarà reso disponibile agli studenti.
+
+```matlab
+% Codice MATLAB da inserire
+```
+
 ## Domande per la relazione
 
 1. Quali connessioni sono rappresentate direttamente da coefficienti fuori diagonale?

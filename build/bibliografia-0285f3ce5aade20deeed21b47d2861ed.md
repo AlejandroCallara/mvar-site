@@ -1,0 +1,85 @@
+# Bibliografia
+
+## Materiali presenti nella cartella `materiale`
+
+Ogni voce riporta il nome del file sorgente, così da rendere esplicita la corrispondenza tra il materiale originale del corso e il riferimento bibliografico. I file restano nell'archivio di lavoro del docente e non vengono pubblicati nel sito.
+
+- Ding, M., Chen, Y., & Bressler, S. L. (2006). Granger causality: Basic theory and application to neuroscience. In B. Schelter, M. Winterhalder, & J. Timmer (Eds.), *Handbook of Time Series Analysis: Recent Theoretical Developments and Applications* (pp. 437–460). Wiley-VCH. [DOI](https://doi.org/10.1002/9783527609970.ch17)<br>
+  File: `0608035v1.pdf`.
+
+- Bressler, S. L., & Seth, A. K. (2011). Wiener–Granger causality: A well established methodology. *NeuroImage, 58*(2), 323–329. [DOI](https://doi.org/10.1016/j.neuroimage.2010.02.059)<br>
+  File: `1-s2.0-S1053811910002272-main.pdf`.
+
+- Blinowska, K. J. (2011). Review of the methods of determination of directed connectivity from multichannel data. *Medical & Biological Engineering & Computing, 49*, 521–529. [DOI](https://doi.org/10.1007/s11517-011-0739-x)<br>
+  File: `11517_2011_Article_739.pdf`.
+
+- Vanello, N. (s.d.). *Granger Causality* (versione 2.1) [materiale didattico].<br>
+  File: `Granger Causality_v2.1.pdf`.
+
+- Faes, L., & Nollo, G. (2011). Multivariate frequency domain analysis of causal interactions in physiological time series. In *Biomedical Engineering, Trends in Electronics, Communications and Software*. IntechOpen.<br>
+  File: `InTech-Multivariate_frequency_domain_analysis_of_causal_interactions_in_physiological_time_series.pdf`.
+
+- Mannino, M., & Bressler, S. L. (2015). Foundational perspectives on causality in large-scale brain networks. *Physics of Life Reviews, 15*, 107–123. [DOI](https://doi.org/10.1016/j.plrev.2015.09.002)<br>
+  File: `PLREV15target.pdf`.
+
+- Barnett, L., & Seth, A. K. (2014). The MVGC multivariate Granger causality toolbox: A new approach to Granger-causal inference. *Journal of Neuroscience Methods, 223*, 50–68. [DOI](https://doi.org/10.1016/j.jneumeth.2013.10.018)<br>
+  File: `barnett2014.pdf`.
+
+- Bastos, A. M., & Schoffelen, J.-M. (2016). Supplementary appendix: Fundamentals of Granger causality and how frequency-resolved directed measures of interactions are computed. Materiale supplementare di *A tutorial review of functional connectivity analysis methods and their interpretational pitfalls*.<br>
+  File: `bastos_appendix.pdf`.
+
+- Bastos, A. M., & Schoffelen, J.-M. (2016). A tutorial review of functional connectivity analysis methods and their interpretational pitfalls. *Frontiers in Systems Neuroscience, 9*, 175. [DOI](https://doi.org/10.3389/fnsys.2015.00175)<br>
+  File: `bastos_review_granger.pdf`.
+
+- Kamiński, M., Brzezicka, A., Kamiński, J., & Blinowska, K. J. (2016). Measures of coupling between neural populations based on Granger causality principle. *Frontiers in Computational Neuroscience, 10*, 114.<br>
+  File: `fncom-10-00114.pdf`.
+
+- Vanello, N. (a.a. 2025–2026). *Brief introduction to multivariate models for brain connectivity analysis* [materiale didattico].<br>
+  File: `granger_MVAR_2526.pdf`.
+
+- Milde, T., Leistritz, L., Astolfi, L., Miltner, W. H. R., Weiss, T., Babiloni, F., & Witte, H. (2010). A new Kalman filter approach for the estimation of high-dimensional time-variant multivariate AR models and its application in analysis of laser-evoked brain potentials. *NeuroImage, 50*(3), 960–969. [DOI](https://doi.org/10.1016/j.neuroimage.2009.12.110)<br>
+  File: `kalman-gc.pdf`.
+
+- Lütkepohl, H. (2005). *New introduction to multiple time series analysis*. Springer.<br>
+  File: `new-introduction-to-multiple-time-series-analysis-9783540277521-3540277528_compress.pdf`.
+
+- Hytti, H., Takalo, R., & Ihalainen, H. (2006). Tutorial on multivariate autoregressive modelling. *Journal of Clinical Monitoring and Computing, 20*, 101–108. [DOI](https://doi.org/10.1007/s10877-006-9013-4)<br>
+  File: `s10877-006-9013-4.pdf`.
+
+- Mullen, T. (s.d.). *Source Information Flow Toolbox (SIFT) manual: Chapters 3 and 4—Multivariate autoregressive modeling and connectivity measures* [manuale software].<br>
+  File: `sift_manual_chapter3and4.pdf`.
+
+- Bastos, A. M., & Schoffelen, J.-M. (2016). *Common input simulation* [codice e risultati supplementari che accompagnano l'articolo].<br>
+  File: `sim_commoninput.pdf`.
+
+- Bastos, A. M., & Schoffelen, J.-M. (2016). *Common reference simulation* [codice e risultati supplementari che accompagnano l'articolo].<br>
+  File: `sim_commonreference.pdf`.
+
+- Bastos, A. M., & Schoffelen, J.-M. (2016). *Sample-size bias simulation* [codice e risultati supplementari che accompagnano l'articolo].<br>
+  File: `sim_samplesizebias.pdf`.
+
+- Bastos, A. M., & Schoffelen, J.-M. (2016). *Signal-to-noise simulation* [codice e risultati supplementari che accompagnano l'articolo].<br>
+  File: `sim_signaltonoise.pdf`.
+
+- Bastos, A. M., & Schoffelen, J.-M. (2016). *Volume conduction simulation* [codice e risultati supplementari che accompagnano l'articolo].<br>
+  File: `sim_volumeconduction.pdf`.
+
+- Plomp, G., Quairiaux, C., Michel, C. M., & Astolfi, L. (2014). The physiological plausibility of time-varying Granger-causal modeling: Normalization and weighting by spectral power. *NeuroImage, 97*, 206–216.<br>
+  File: `time-varying-gc.pdf`.
+
+## Altri riferimenti citati nella dispensa
+
+- Baccalá, L. A., & Sameshima, K. (2001). Partial directed coherence: A new concept in neural structure determination. *Biological Cybernetics, 84*, 463–474.
+- Brillinger, D. R. (2001). *Time series: Data analysis and theory*. SIAM.
+- Granger, C. W. J. (1969). Investigating causal relations by econometric models and cross-spectral methods. *Econometrica, 37*(3), 424–438.
+- Kamiński, M. J., & Blinowska, K. J. (1991). A new method of the description of the information flow in the brain structures. *Biological Cybernetics, 65*, 203–210.
+- Korzeniewska, A., Mańczak, M., Kamiński, M., Blinowska, K. J., & Kasicki, S. (2003). Determination of information flow direction among brain structures by a modified directed transfer function method. *Journal of Neuroscience Methods, 125*, 195–207.
+- Schlögl, A. (2006). A comparison of multivariate autoregressive estimators. *Signal Processing, 86*, 2426–2429.
+
+## Risorsa video
+
+- Cohen, M. X. (s.d.). [*Granger causality (prediction)*](https://www.youtube.com/watch?v=XqsSB_vpHLs) [video]. YouTube.
+
+## Materiale del corso
+
+La dispensa deriva dalla presentazione `mvar_1.pptx`, dai due testi di esercitazione e dagli script MATLAB forniti con il corso. Le sezioni sul filtro di Kalman incorporano anche il materiale di approfondimento sviluppato nella chat “Spiegazione algoritmo Vieira Morf”.

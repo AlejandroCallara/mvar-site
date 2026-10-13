@@ -84,6 +84,14 @@ Valutare l'effetto di $N$ su $\widehat{\mathbf{A}}_1$, variabilità delle stime 
 
 Scrivere autonomamente uno script MATLAB che svolga nell'ordine le attività richieste. Il codice di partenza e la soluzione non sono forniti in questa versione della dispensa. Motivare nel codice o nella relazione le scelte relative a inizializzazione, burn-in, costruzione dei regressori, stima dei modelli ridotti e test di significatività.
 
+## Codice MATLAB da condividere
+
+In questo spazio verrà inserito il solo frammento di codice MATLAB che sarà reso disponibile agli studenti.
+
+```matlab
+% Codice MATLAB da inserire
+```
+
 ## Domande per la relazione
 
 1. Quale struttura direzionale ci si aspetta dai tre sistemi?

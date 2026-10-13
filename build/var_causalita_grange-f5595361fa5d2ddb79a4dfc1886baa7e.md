@@ -6,11 +6,24 @@ Molti segnali biomedici sono acquisiti simultaneamente da più canali. Un EEG mu
 
 Questa domanda appartiene allo studio della **connettività effettiva**, cioè delle dipendenze direzionali tra processi. Va distinta dalla connettività funzionale, che descrive associazioni statistiche senza attribuire necessariamente una direzione. Una correlazione elevata tra due segnali non stabilisce quale dei due anticipi l'altro e può derivare da una terza sorgente comune.
 
+```{figure} ../assets/figures/tipi_connettivita.png
+:alt: Confronto tra connettività strutturale, funzionale ed effettiva
+:width: 95%
+:name: fig-tipi-connettivita
+
+Tre livelli di descrizione della connettività: struttura anatomica, dipendenza statistica e influenza direzionale. Schema tratto dalla presentazione del corso.
+```
+
 La causalità di Granger formalizza una nozione precisa e limitata di causalità:
 
 > Il processo $x_j$ causa $x_i$ nel senso di Granger se il passato di $x_j$ migliora la previsione di $x_i$ oltre l'informazione già contenuta nel passato di $x_i$ e delle altre variabili incluse nel modello.
 
 I due ingredienti sono quindi la **precedenza temporale** e l'**informazione predittiva aggiuntiva**. Questa definizione non dimostra da sola un meccanismo fisico o biologico. La conclusione dipende dai segnali osservati, dal campionamento, dal preprocessing e dall'adeguatezza del modello.
+
+```{admonition} Video di approfondimento
+:class: tip
+Per consolidare l'interpretazione predittiva della causalità di Granger si può vedere [*Granger causality (prediction)* di Mike X Cohen](https://www.youtube.com/watch?v=XqsSB_vpHLs). Il video è una risorsa integrativa e non sostituisce le verifiche sul modello discusse in questo capitolo.
+```
 
 ## 2. Dall'autoregressione al modello vettoriale
 
@@ -171,6 +184,14 @@ I minimi quadrati costituiscono il riferimento per un VAR stazionario a coeffici
 ## 5. Scelta dell'ordine
 
 Un ordine troppo basso lascia dipendenza temporale nei residui. Un ordine troppo alto aumenta la varianza delle stime e può adattare il rumore. I criteri di informazione bilanciano adattamento e complessità.
+
+```{figure} ../assets/figures/ordine_modello.png
+:alt: Compromesso nella scelta dell'ordine del modello autoregressivo
+:width: 80%
+:name: fig-ordine-modello
+
+Compromesso nella scelta dell'ordine: un modello troppo semplice lascia struttura nei residui, mentre un modello troppo complesso aumenta varianza e rischio di sovradattamento. Schema tratto dalla presentazione del corso.
+```
 
 Indicando con $T_e=T-p$ il numero di campioni effettivi, con $k$ il numero di parametri e con $\widehat{\boldsymbol{\Sigma}}_u(p)$ la covarianza residua, una forma generale è
 
@@ -421,6 +442,14 @@ $$
 
 La PDC è spesso interpretata come influenza diretta e condizionata da $j$ a $i$. La normalizzazione risponde alla domanda: come si distribuisce, tra i possibili bersagli, il flusso uscente dalla sorgente $j$?
 
+```{figure} ../assets/figures/pdc_normalizzazione.png
+:alt: Normalizzazione della PDC rispetto alle connessioni uscenti dalla sorgente
+:width: 62%
+:name: fig-pdc-normalizzazione
+
+Nella PDC la connessione $j\rightarrow i$ evidenziata viene confrontata con tutte le connessioni uscenti dalla sorgente $j$. Schema tratto dalla presentazione del corso.
+```
+
 ### 11.1 gPDC
 
 La PDC generalizzata pesa le equazioni mediante la deviazione standard delle innovazioni:
@@ -449,6 +478,14 @@ $$
 $$
 
 La domanda è: quale quota dell'attività che raggiunge $i$ può essere associata alla sorgente $j$? Poiché $\mathbf{H}(f)$ contiene la propagazione attraverso l'intero sistema, la DTF può rilevare anche percorsi indiretti.
+
+```{figure} ../assets/figures/dtf_normalizzazione.png
+:alt: Normalizzazione della DTF rispetto alle connessioni entranti nel bersaglio
+:width: 62%
+:name: fig-dtf-normalizzazione
+
+Nella DTF la connessione $j\rightarrow i$ evidenziata viene confrontata con tutti i contributi che raggiungono il bersaglio $i$. Schema tratto dalla presentazione del corso.
+```
 
 La full-frequency DTF usa un denominatore che integra sulle frequenze:
 
@@ -525,6 +562,32 @@ $$
 
 con $\rho=0.9$, $f_1=0.1$ Hz, $f_3=0.3$ Hz e $\Delta t=1$ s. La struttura contiene $1\rightarrow2$, $3\rightarrow2$, $2\rightarrow3$ e $1\rightarrow4$. Il percorso $1\rightarrow2\rightarrow3$ può emergere nella DTF anche quando non esiste un coefficiente diretto $1\rightarrow3$.
 
+```{figure} ../assets/figures/rete_var_faes_nollo.png
+:alt: Rete VAR a quattro nodi dell'esempio di Faes e Nollo
+:width: 70%
+:name: fig-rete-var-faes-nollo
+
+Struttura della rete VAR(2) usata nell'esempio. Adattata dal materiale di Faes e Nollo (2011) già incluso nella presentazione del corso.
+```
+
+Le due matrici di grafici seguenti mostrano perché PDC e DTF non devono essere lette come misure intercambiabili. Ogni pannello $(i,j)$ rappresenta la direzione $j\rightarrow i$.
+
+```{figure} ../assets/figures/pdc_faes_nollo.png
+:alt: PDC dell'esempio VAR a quattro nodi
+:width: 90%
+:name: fig-pdc-faes-nollo
+
+PDC dell'esempio a quattro nodi: la normalizzazione privilegia le connessioni dirette uscenti dalla sorgente. Adattata da Faes e Nollo (2011).
+```
+
+```{figure} ../assets/figures/dtf_faes_nollo.png
+:alt: DTF dell'esempio VAR a quattro nodi
+:width: 90%
+:name: fig-dtf-faes-nollo
+
+DTF dello stesso esempio: la funzione di trasferimento può evidenziare anche la propagazione lungo percorsi indiretti. Adattata da Faes e Nollo (2011).
+```
+
 La [seconda esercitazione](../esercitazioni/esercitazione_2.md) guida stima e interpretazione.
 
 ## 15. Modelli VAR tempo-varianti
@@ -538,6 +601,22 @@ $$
 ### 15.1 Finestre scorrevoli
 
 Si stima un VAR indipendente in ogni finestra. Il metodo è trasparente, ma assume stazionarietà locale. Una finestra lunga riduce la varianza e smussa le transizioni; una finestra corta migliora la localizzazione temporale ma rende la stima più instabile.
+
+```{figure} ../assets/figures/lunghezza_finestra.png
+:alt: Compromesso tra finestra temporale corta e lunga
+:width: 82%
+:name: fig-lunghezza-finestra
+
+La lunghezza della finestra determina il compromesso tra risoluzione temporale e affidabilità della stima. Schema tratto dalla presentazione del corso.
+```
+
+```{figure} ../assets/figures/var_finestre_scorrevoli.png
+:alt: Stima VAR su prove multiple mediante finestre scorrevoli
+:width: 90%
+:name: fig-var-finestre-scorrevoli
+
+Esempio concettuale di stima VAR locale su prove multiple mediante una finestra che scorre nel tempo. Schema tratto dalla presentazione del corso.
+```
 
 ### 15.2 Recursive Least Squares
 
