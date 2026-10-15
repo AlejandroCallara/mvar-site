@@ -84,12 +84,61 @@ Valutare l'effetto di $N$ su $\widehat{\mathbf{A}}_1$, variabilità delle stime 
 
 Scrivere autonomamente uno script MATLAB che svolga nell'ordine le attività richieste. Il codice di partenza e la soluzione non sono forniti in questa versione della dispensa. Motivare nel codice o nella relazione le scelte relative a inizializzazione, burn-in, costruzione dei regressori, stima dei modelli ridotti e test di significatività.
 
-## Codice MATLAB da condividere
+## Sfruttare il seguento scheletro per completare l'esercitazione
 
-In questo spazio verrà inserito il solo frammento di codice MATLAB che sarà reso disponibile agli studenti.
 
 ```matlab
-% Codice MATLAB da inserire
+clear
+clc
+
+% simulazione u(t)
+N = 100;
+mu=[0 0];
+sigma=[0.3 0; 0 0.3];
+%potete provare a inserire un valore di cxy
+%con |cxy|<sigmax*sigmay
+u=mvnrnd(mu, sigma, N)';
+
+x1(1)=0;%le condizioni iniziali possono essere diverse
+x2(1)=0;%se avessi un modello di ordine 2 servirebbero altre due condizioni
+X = [x1;x2];
+A = [-0.7 -0.2; -0.2 -0.7];
+p = 1;
+for k=2:N
+    X(:,k)=A*X(:,k-1)+u(:,k);
+end
+
+%da ora in poi consideriamo le due serie temporali e verifichiamo i valori degli indici di Granger
+%dovremmo stimare due modelli marginali e uno completo
+
+
+% =========================================================================
+% 1. MODELLO COMPLETO (VAR)
+% =========================================================================
+Y = X(:, p+1:end);
+[M, T] = size(X);
+num_obs = T - p;
+
+% Costruzione di Z per il modello completo
+Z = zeros(M*p + 1, num_obs);
+Z(1, :) = 1;
+for k = 1:p
+    row_idx = (1 + (k-1)*M + 1) : (1 + k*M);
+    Z(row_idx, :) = X(:, (p - k + 1):(T - k));
+end
+
+B = Y * Z' / (Z * Z'); % Nota: / è preferibile numericamente rispetto a *inv()
+u_hat = Y - B * Z;
+
+% Varianze dei residui del modello completo (sulla diagonale della covariance)
+sigma1_full = var(u_hat(1, :));
+sigma2_full = var(u_hat(2, :));
+
+
+% =========================================================================
+% 2. MODELLI MARGINALI (AR UNIVARIATI)
+% =========================================================================
+
 ```
 
 ## Domande per la relazione
@@ -100,7 +149,6 @@ In questo spazio verrà inserito il solo frammento di codice MATLAB che sarà re
 4. Il mancato rifiuto dell'ipotesi nulla dimostra l'assenza di connessione?
 5. Quale modello nullo viene usato dal test scelto?
 
-## Consegna minima
-
-La relazione deve contenere matrici vere e stimate, autovalori, covarianza residua, GC nelle due direzioni, esito dell'inferenza e un breve commento sull'effetto della numerosità.
+## Extra
+Prendere spunto  dalla [Demo 45](../demo/demo_45_validazione.md) per validare il modello. 
 
