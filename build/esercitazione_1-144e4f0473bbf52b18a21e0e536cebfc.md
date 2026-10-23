@@ -1,8 +1,6 @@
-# Esercitazione 1
+# Esercitazione 1 - Simulazione e stima di un VAR(1) bivariato
 
-## Simulazione e stima di un VAR(1) bivariato
-
-### Obiettivi
+## Obiettivo
 
 L'esercitazione consolida simulazione, stima ai minimi quadrati, controllo della stabilità e causalità di Granger nel dominio del tempo. Il confronto tra tre matrici permette di collegare la struttura dei coefficienti alla direzione attesa della GC.
 
@@ -140,8 +138,6 @@ sigma2_full = var(u_hat(2, :));
 % =========================================================================
 
 ```
-
-## Domande per la relazione
 
 1. Quale struttura direzionale ci si aspetta dai tre sistemi?
 2. Quanto cambia l'errore $\|\widehat{\mathbf{A}}_1-\mathbf{A}_1\|_F$ passando da 100 a 1000 campioni?

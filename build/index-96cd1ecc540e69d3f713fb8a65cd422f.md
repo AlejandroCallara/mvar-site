@@ -24,14 +24,13 @@ Al termine del modulo lo studente saprà:
 - riconoscere gli effetti di SNR, numerosità campionaria e variabili non osservate;
 - confrontare finestre mobili, RLS e filtro di Kalman su un TV-VAR e interpretare la PDC tempo-frequenza.
 
-La [Demo 52](demo/demo_52_tv_var.md) conclude il percorso con una simulazione tempo-variante: gli stessi segnali vengono analizzati mediante finestre mobili, RLS e Kalman e confrontati con coefficienti e PDC teorici.
-
 ## Percorso consigliato
 
 1. Leggere il capitolo principale seguendo l'ordine delle sezioni.
 2. Eseguire le demo MATLAB quando vengono richiamate nel testo.
-3. Svolgere le  esercitazioni 
-4. Confrontare i risultati con le indicazioni riportate nelle pagine delle demo.
+3. Svolgere le tre esercitazioni: [GC nel tempo](esercitazioni/esercitazione_1.md), [misure nel dominio della frequenza](esercitazioni/esercitazione_2.md) e [inferenza mediante surrogati di fase](esercitazioni/esercitazione_3.md).
+
+**Le esercitazioni saranno argomento di esame.**
 
 ```{admonition} Convenzione degli indici
 :class: important
