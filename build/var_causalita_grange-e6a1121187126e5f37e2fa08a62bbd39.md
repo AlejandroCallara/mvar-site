@@ -1422,7 +1422,7 @@ In sintesi, una soglia statistica è interpretabile soltanto insieme alla proced
 
 L'[esercitazione 2](../esercitazioni/esercitazione_2.md) raccoglie il modello VAR(2) a quattro variabili, le attività di stima e il confronto fra PDC e DTF. Le spiegazioni e le figure dell'esempio sono disponibili nella stessa pagina, nella parte da consultare dopo lo svolgimento.
 
-L'[esercitazione 3](../esercitazioni/esercitazione_3.md) prosegue sullo stesso sistema con i surrogati di fase e le soglie di significatività. Completato questo percorso sui modelli stazionari, si passa ai modelli VAR tempo-varianti.
+L'[esercitazione 3](../esercitazioni/esercitazione_3.md) prosegue sullo stesso sistema con i surrogati di fase e le soglie di significatività. 
 
 ## 15. Modelli VAR tempo-varianti
 
