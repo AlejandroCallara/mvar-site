@@ -82,7 +82,7 @@ Valutare l'effetto di $N$ su $\widehat{\mathbf{A}}_1$, variabilità delle stime 
 
 Scrivere autonomamente uno script MATLAB che svolga nell'ordine le attività richieste. Il codice di partenza e la soluzione non sono forniti in questa versione della dispensa. Motivare nel codice o nella relazione le scelte relative a inizializzazione, burn-in, costruzione dei regressori, stima dei modelli ridotti e test di significatività.
 
-## Sfruttare il seguento scheletro per completare l'esercitazione
+**Sfruttare il seguento scheletro per completare l'esercitazione**
 
 
 ```matlab
