@@ -146,5 +146,6 @@ sigma2_full = var(u_hat(2, :));
 5. Quale modello nullo viene usato dal test scelto?
 
 ## Extra
-Prendere spunto  dalla [Demo 45](../demo/demo_45_validazione.md) per validare il modello. 
 
+1. Prendere spunto  dalla [Demo 45](../demo/demo_45_validazione.md) per validare il modello. 
+2. Confrontare la significatività della GC ottenuta con il test asintotico chi-quadrato e con il bootstrap dei residui sotto $(H_0)$ della [Demo 50](../demo/demo_50_bootstrap.md). Riutilizzare e adattare soltanto il codice necessario al bootstrap, senza ripetere la simulazione dei dati. Per ciascun sistema, nelle due direzioni e per entrambe le numerosità campionarie, riportare il valore della GC, i due p-value e la decisione al livello $\alpha=0.05$. Commentare eventuali differenze e l’effetto del numero di campioni.
