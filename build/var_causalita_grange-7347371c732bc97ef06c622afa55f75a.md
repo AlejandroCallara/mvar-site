@@ -1676,324 +1676,322 @@ Nella [Demo 52](../demo/demo_52_tv_var.md), i coefficienti noti permettono di os
 
 ## 16. Filtro di Kalman per il TV-VAR
 
-Il filtro di Kalman fornisce una formulazione probabilistica della stima adattiva. I coefficienti variabili nel tempo vengono trattati come uno **stato nascosto**: non sono osservati direttamente, ma vengono inferiti dai segnali e dai loro valori passati. Il modello specifica sia come ci si aspetta che i coefficienti evolvano, sia come essi generano le osservazioni.
+Quando osserviamo un segnale rumoroso, una variazione della misura può dipendere da un cambiamento della quantità che vogliamo stimare oppure dal rumore. Il filtro di Kalman affronta questo problema combinando due informazioni: ciò che il modello prevede e ciò che la nuova misura suggerisce.
 
-Il risultato, a ogni istante, comprende due elementi:
+A ogni istante il filtro aggiorna sia una stima sia l'incertezza associata. Per comprenderne il funzionamento, partiamo dalla stima di una singola quantità e successivamente estendiamo il ragionamento ai coefficienti di un VAR.
 
-- una stima dei coefficienti;
-- una matrice che descrive l'incertezza associata a tale stima.
+### 16.1 Il ciclo del filtro: predizione e stima
 
-Questa distinzione è importante. Due traiettorie dei coefficienti possono apparire simili, ma avere affidabilità molto diversa se una è sostenuta da regressori informativi e l'altra deriva da un intervallo rumoroso o scarsamente eccitato.
+Supponiamo di voler seguire una quantità nascosta $\theta_t$, osservabile attraverso una misura rumorosa $y_t$. Al tempo precedente disponiamo di una stima $\hat\theta_{t-1}$ e di una misura della sua incertezza $P_{t-1}$, espressa dalla varianza dell'errore di stima.
 
-### 16.1 Modello stato-spazio generale
+Il filtro procede in due fasi:
 
-Un modello stato-spazio lineare è descritto da un'equazione di stato e da un'equazione di osservazione:
+| Fase | Informazione utilizzata | Risultato |
+|---|---|---|
+| Predizione | Stima precedente e modello di evoluzione | Predizione $\hat\theta_t^-$ e incertezza $P_t^-$ |
+| Stima aggiornata | Predizione e nuova misura $y_t$ | Stima $\hat\theta_t$ e incertezza $P_t$ |
+
+La coppia $(\hat\theta_t,P_t)$ diventa il punto di partenza della predizione successiva. Il ciclo completo è quindi
 
 $$
-\boldsymbol{\theta}_t
-=
-\mathbf F_t\boldsymbol{\theta}_{t-1}
-+
-\mathbf w_t,
+(\hat\theta_{t-1},P_{t-1})
+\xrightarrow{\text{predizione}}
+(\hat\theta_t^-,P_t^-)
+\xrightarrow{\text{nuova misura }y_t}
+(\hat\theta_t,P_t).
+$$
+
+L'apice **“−”** identifica una quantità calcolata **prima di utilizzare la misura corrente**. La quantità senza apice identifica invece il risultato **dopo aver incorporato quella misura**. Entrambe sono stime: cambia l'informazione disponibile per calcolarle. L'apice non indica un valore negativo.
+
+#### Predizione: cosa ci aspettiamo prima della nuova misura?
+
+Nel caso più semplice, assumiamo che la quantità nascosta tenda a mantenere il valore precedente. La predizione è quindi
+
+$$
+\hat\theta_t^-=\hat\theta_{t-1}.
+$$
+
+Questo non significa che siamo certi che il valore sia rimasto invariato. Ammettiamo che possa essere cambiato e aumentiamo l'incertezza:
+
+$$
+P_t^-=P_{t-1}+Q.
+$$
+
+Il parametro $Q$ rappresenta la variabilità ammessa tra due istanti consecutivi. Una previsione può quindi rimanere numericamente uguale alla stima precedente, pur diventando meno certa.
+
+#### Stima: come utilizziamo la nuova misura?
+
+Quando arriva $y_t$, confrontiamo la misura con la predizione:
+
+$$
+\nu_t=y_t-\hat\theta_t^-.
+$$
+
+Lo scarto $\nu_t$ prende il nome di **innovazione**. Il filtro usa una parte di questo scarto per correggere la predizione:
+
+$$
+\boxed{\hat\theta_t=\hat\theta_t^-+K_t\bigl(y_t-\hat\theta_t^-\bigr)}.
+$$
+
+La struttura è quindi: **stima aggiornata = predizione + guadagno × innovazione**.
+
+Nel caso scalare, se la misura osserva direttamente $\theta_t$ con rumore di varianza $R$, il guadagno è
+
+$$
+K_t=\frac{P_t^-}{P_t^-+R}.
+$$
+
+Possiamo riscrivere l'aggiornamento come
+
+$$
+\hat\theta_t=(1-K_t)\hat\theta_t^-+K_t y_t.
+$$
+
+Il guadagno stabilisce quanto correggere la predizione verso il nuovo dato. Se la predizione è molto incerta rispetto alla misura, $K_t$ è vicino a uno. Se la misura è molto rumorosa rispetto alla predizione, $K_t$ è vicino a zero.
+
+### 16.2 Dal ciclo predizione–stima al modello stato-spazio
+
+Nell'esempio precedente abbiamo assunto che la migliore predizione fosse il valore stimato al passo precedente. Per descrivere dinamiche più generali introduciamo un **modello stato-spazio**.
+
+Lo stato nascosto può ora essere un vettore $\boldsymbol\theta_t$. La sua evoluzione è descritta dall'equazione di stato:
+
+$$
+\boldsymbol\theta_t=\mathbf F_t\boldsymbol\theta_{t-1}+\mathbf w_t,
+\qquad \operatorname{Cov}(\mathbf w_t)=\mathbf Q_\theta.
+$$
+
+La matrice $\mathbf F_t$ descrive come ci aspettiamo che lo stato evolva. Il termine $\mathbf w_t$ rappresenta gli scostamenti da questa dinamica.
+
+L'equazione di osservazione collega lo stato nascosto alla misura:
+
+$$
+\mathbf y_t=\mathbf H_t\boldsymbol\theta_t+\mathbf v_t,
+\qquad \operatorname{Cov}(\mathbf v_t)=\mathbf R_y.
+$$
+
+La matrice $\mathbf H_t$ specifica come lo stato contribuisce a generare il dato osservato. Nella formulazione standard assumiamo rumori a media nulla, bianchi e indipendenti tra loro e dallo stato iniziale. Con stato iniziale e rumori gaussiani, il modello lineare permette di descrivere esattamente le distribuzioni mediante media e covarianza.
+
+Il ciclo visto nella sezione precedente mantiene la stessa struttura.
+
+#### Predizione dello stato e della sua incertezza
+
+$$
+\hat{\boldsymbol\theta}_t^-=\mathbf F_t\hat{\boldsymbol\theta}_{t-1},
+$$
+
+$$
+\mathbf P_t^-=\mathbf F_t\mathbf P_{t-1}\mathbf F_t^{\mathsf T}+\mathbf Q_\theta.
+$$
+
+#### Confronto con la nuova osservazione
+
+Prima prevediamo quale misura dovrebbe produrre lo stato predetto:
+
+$$
+\hat{\mathbf y}_t^-=\mathbf H_t\hat{\boldsymbol\theta}_t^-.
+$$
+
+Poi calcoliamo innovazione e relativa covarianza:
+
+$$
+\boldsymbol\nu_t=\mathbf y_t-\hat{\mathbf y}_t^-,
 \qquad
-\mathbf w_t\sim
-\mathcal N(\mathbf 0,\mathbf Q_{\theta}),
+\mathbf S_t=\mathbf H_t\mathbf P_t^-\mathbf H_t^{\mathsf T}+\mathbf R_y.
+$$
+
+Un'innovazione grande va confrontata con $\mathbf S_t$: lo stesso scarto può essere inatteso quando l'incertezza prevista è piccola e plausibile quando stato e osservazione sono molto incerti.
+
+#### Guadagno e stima aggiornata
+
+$$
+\mathbf K_t=\mathbf P_t^-\mathbf H_t^{\mathsf T}\mathbf S_t^{-1},
 $$
 
 $$
-\mathbf y_t
-=
-\mathbf H_t\boldsymbol{\theta}_t
-+
-\mathbf v_t,
+\boxed{\hat{\boldsymbol\theta}_t=\hat{\boldsymbol\theta}_t^-+\mathbf K_t\boldsymbol\nu_t},
+$$
+
+$$
+\mathbf P_t=(\mathbf I-\mathbf K_t\mathbf H_t)\mathbf P_t^-.
+$$
+
+Le matrici generalizzano il ragionamento scalare: il filtro propaga una previsione, ne valuta l'incertezza e incorpora l'informazione fornita dalla nuova osservazione.
+
+La notazione è equivalente a quella condizionata:
+
+$$
+\hat{\boldsymbol\theta}_t^-\equiv\hat{\boldsymbol\theta}_{t|t-1},
 \qquad
-\mathbf v_t\sim
-\mathcal N(\mathbf 0,\mathbf R_y).
+\hat{\boldsymbol\theta}_t\equiv\hat{\boldsymbol\theta}_{t|t},
 $$
 
-L'equazione di stato descrive l'evoluzione dello stato nascosto $\boldsymbol\theta_t$. La matrice $\mathbf F_t$ rappresenta la dinamica attesa, mentre $\mathbf Q_{\theta}$ quantifica quanto lo stato può discostarsi da tale dinamica.
-
-L'equazione di osservazione collega lo stato al dato misurato. La matrice $\mathbf H_t$ traduce i parametri nascosti nello spazio delle osservazioni e $\mathbf R_y$ descrive la variabilità che il modello di osservazione non spiega.
-
-Si assume normalmente che $\mathbf w_t$ e $\mathbf v_t$ abbiano media nulla, siano serialmente incorrelati e indipendenti tra loro. La gaussianità rende esatta la descrizione mediante media e covarianza nel modello lineare. Anche quando essa è soltanto approssimata, il filtro conserva l'interpretazione di stimatore lineare ricorsivo.
-
-### 16.2 Predizione e correzione
-
-La notazione $t|s$ indica una quantità relativa al tempo $t$ stimata usando i dati disponibili fino al tempo $s$. Il filtro alterna una fase di predizione, basata sul modello di stato, e una fase di correzione, basata sulla nuova osservazione.
-
-#### Predizione
-
-La stima precedente viene propagata al tempo corrente:
-
 $$
-\widehat{\boldsymbol{\theta}}_{t|t-1}
-=
-\mathbf F_t
-\widehat{\boldsymbol{\theta}}_{t-1|t-1}.
+\mathbf P_t^-\equiv\mathbf P_{t|t-1},
+\qquad
+\mathbf P_t\equiv\mathbf P_{t|t}.
 $$
 
-Anche la covarianza dell'errore viene propagata:
+### 16.3 Applicazione al TV-VAR: lo stato contiene i coefficienti
+
+Per applicare questo schema al TV-VAR dobbiamo identificare **che cosa costituisce lo stato nascosto e che cosa costituisce l'osservazione**.
+
+Consideriamo
 
 $$
-\mathbf P_{t|t-1}
-=
-\mathbf F_t
-\mathbf P_{t-1|t-1}
-\mathbf F_t^{\mathsf T}
-+
-\mathbf Q_{\theta}.
+\mathbf x_t=\sum_{r=1}^{p}\mathbf A_r(t)\mathbf x_{t-r}+\mathbf u_t.
 $$
 
-Il termine $\mathbf Q_{\theta}$ aumenta l'incertezza perché ammette che lo stato possa essere cambiato tra $t-1$ e $t$.
+I segnali $\mathbf x_t$ sono osservati. Le matrici $\mathbf A_r(t)$, che descrivono le relazioni predittive tra i segnali, sono invece incognite e possono cambiare nel tempo. **Sono i loro coefficienti a costituire lo stato che vogliamo stimare.**
 
-#### Innovazione
-
-La previsione dell'osservazione è
+Per vedere il collegamento, partiamo da una singola equazione:
 
 $$
-\widehat{\mathbf y}_{t|t-1}
-=
-\mathbf H_t
-\widehat{\boldsymbol{\theta}}_{t|t-1}.
+x_{i,t}=\mathbf z_t^{\mathsf T}\boldsymbol\theta_{i,t}+u_{i,t},
 $$
 
-La differenza tra dato osservato e dato previsto prende il nome di innovazione del filtro:
+dove $\mathbf z_t$ raccoglie i campioni passati dei segnali e $\boldsymbol\theta_{i,t}$ i coefficienti dell'equazione della variabile $i$. Questa è già un'equazione di osservazione: i regressori sono disponibili, mentre i coefficienti sono nascosti.
+
+Per trattare insieme tutte le equazioni definiamo
 
 $$
-\boldsymbol{\nu}_t
-=
-\mathbf y_t-
-\mathbf H_t\widehat{\boldsymbol{\theta}}_{t|t-1}.
+\mathbf B_t=\begin{bmatrix}\mathbf A_1(t)&\cdots&\mathbf A_p(t)\end{bmatrix},
+\qquad
+\boldsymbol\theta_t=\operatorname{vec}(\mathbf B_t)\in\mathbb R^{M^2p},
 $$
 
-La sua covarianza prevista è
-
 $$
-\mathbf S_t
-=
-\mathbf H_t
-\mathbf P_{t|t-1}
-\mathbf H_t^{\mathsf T}
-+
-\mathbf R_y.
+\mathbf z_t=\begin{bmatrix}\mathbf x_{t-1}^{\mathsf T}&\cdots&\mathbf x_{t-p}^{\mathsf T}\end{bmatrix}^{\mathsf T}\in\mathbb R^{Mp}.
 $$
 
-Un'innovazione grande non implica necessariamente un cambiamento dello stato. Va confrontata con $\mathbf S_t$: uno scarto può essere rilevante quando l'incertezza prevista è piccola e del tutto plausibile quando osservazione e stato sono molto incerti.
-
-#### Guadagno e correzione
-
-Il guadagno di Kalman è
+Con vettorizzazione per colonne:
 
 $$
-\mathbf K_t
-=
-\mathbf P_{t|t-1}
-\mathbf H_t^{\mathsf T}
-\mathbf S_t^{-1}.
+\mathbf x_t=\underbrace{(\mathbf z_t^{\mathsf T}\otimes\mathbf I_M)}_{\mathbf H_t}\boldsymbol\theta_t+\mathbf u_t,
+\qquad \mathbf H_t\in\mathbb R^{M\times M^2p}.
 $$
 
-La stima corretta diventa
+La corrispondenza con il modello generale è quindi:
 
-$$
-\widehat{\boldsymbol{\theta}}_{t|t}
-=
-\widehat{\boldsymbol{\theta}}_{t|t-1}
-+
-\mathbf K_t\boldsymbol{\nu}_t,
-$$
-
-e la sua covarianza viene aggiornata come
-
-$$
-\mathbf P_{t|t}
-=
-(\mathbf I-\mathbf K_t\mathbf H_t)
-\mathbf P_{t|t-1}.
-$$
-
-Il guadagno bilancia due fonti di informazione. Se la previsione dello stato è incerta rispetto al rumore osservativo, il nuovo dato produce una correzione ampia. Se l'osservazione è molto rumorosa, il filtro si affida maggiormente alla traiettoria prevista.
-
-| Situazione | Effetto prevalente |
+| Modello stato-spazio | Applicazione al TV-VAR |
 |---|---|
-| $\mathbf P_{t\|t-1}$ grande | maggiore disponibilità a correggere lo stato |
-| $\mathbf R_y$ grande | minore peso assegnato alla nuova osservazione |
-| $\mathbf Q_{\theta}$ grande | crescita più rapida dell'incertezza e maggiore adattabilità |
-| osservazione informativa | riduzione della covarianza dopo la correzione |
+| Stato $\boldsymbol\theta_t$ | Coefficienti delle matrici autoregressive |
+| Osservazione $\mathbf y_t$ | Campione multivariato corrente $\mathbf x_t$ |
+| Matrice $\mathbf H_t$ | Matrice costruita dai campioni passati |
+| Rumore osservativo | Innovazione VAR $\mathbf u_t$, con covarianza $\mathbf R_u$ |
 
-Il filtro usa soltanto dati presenti e passati. Un **Kalman smoother**, applicato dopo avere acquisito l'intera registrazione, usa anche osservazioni future per rivedere le stime precedenti. Le mappe filtrate e quelle smussate non hanno quindi la stessa interpretazione temporale e il metodo utilizzato deve essere dichiarato.
+La matrice $\mathbf H_t$ cambia a ogni campione, ma è disponibile prima di usare $\mathbf x_t$, perché dipende soltanto dai regressori osservati nel passato.
 
-### 16.3 Il TV-VAR come modello stato-spazio
-
-Nel TV-VAR, lo stato nascosto raccoglie i coefficienti delle matrici autoregressive:
+Per l'evoluzione dei coefficienti assumiamo, ad esempio, un random walk:
 
 $$
-\boldsymbol{\theta}_t
-=
-\operatorname{vec}
-\begin{bmatrix}
-\mathbf A_1(t)&\cdots&\mathbf A_p(t)
-\end{bmatrix},
+\boldsymbol\theta_t=\boldsymbol\theta_{t-1}+\mathbf w_t.
+$$
+
+Di conseguenza, $\mathbf F_t=\mathbf I$: prima di osservare il nuovo campione prevediamo che i coefficienti persistano, ammettendo però un'incertezza sul loro cambiamento. Il random walk esprime un'ipotesi di regolarità temporale, non una descrizione obbligata della dinamica fisiologica.
+
+Il ciclo diventa:
+
+$$
+\underbrace{\hat{\boldsymbol\theta}_t^-=\hat{\boldsymbol\theta}_{t-1}}_{\text{predizione dei coefficienti}},
 \qquad
-\dim(\boldsymbol{\theta}_t)=M^2p.
+\mathbf P_t^-=\mathbf P_{t-1}+\mathbf Q_\theta,
 $$
 
-Il vettore dei regressori è
-
 $$
-\mathbf z_t
-=
-\begin{bmatrix}
-\mathbf x_{t-1}^{\mathsf T}&
-\cdots&
-\mathbf x_{t-p}^{\mathsf T}
-\end{bmatrix}^{\mathsf T}
-\in\mathbb R^{Mp}.
+\underbrace{\hat{\mathbf x}_t^-=\mathbf H_t\hat{\boldsymbol\theta}_t^-}_{\text{predizione del campione}},
 $$
 
-Usando il prodotto di Kronecker, l'equazione VAR può essere riscritta come
-
 $$
-\mathbf x_t
-=
-\underbrace{
-(\mathbf z_t^{\mathsf T}\otimes\mathbf I_M)
-}_{\mathbf H_t}
-\boldsymbol{\theta}_t
-+
-\mathbf u_t,
+\underbrace{\hat{\boldsymbol\theta}_t=\hat{\boldsymbol\theta}_t^-+\mathbf K_t(\mathbf x_t-\hat{\mathbf x}_t^-)}_{\text{stima aggiornata dei coefficienti}}.
 $$
 
-con
+Occorre distinguere le due predizioni: **prevediamo i coefficienti mediante il modello di stato e, usando quei coefficienti, prevediamo il segnale mediante il modello VAR**. Lo scarto rispetto al campione osservato viene poi usato per aggiornare i coefficienti.
+
+Anche le due innovazioni hanno significati distinti. L'innovazione VAR $\mathbf u_t$ appartiene al modello generativo; l'innovazione del filtro $\boldsymbol\nu_t$ è calcolata usando coefficienti stimati e incorpora anche l'effetto della loro incertezza. Nel filtro per il TV-VAR,
 
 $$
-\mathbf H_t\in
-\mathbb R^{M\times M^2p}.
+\mathbf S_t=\mathbf H_t\mathbf P_t^-\mathbf H_t^{\mathsf T}+\mathbf R_u.
 $$
 
-La matrice di osservazione non è costante: cambia a ogni campione perché viene costruita con i valori passati dei segnali. In questa formulazione, $\mathbf u_t$ svolge il ruolo di rumore dell'equazione di osservazione e la sua covarianza è
-
-$$
-\mathbf R_u=\operatorname{Cov}(\mathbf u_t).
-$$
-
-Un modello semplice per l'evoluzione dei coefficienti è il random walk:
-
-$$
-\boldsymbol{\theta}_t
-=
-\boldsymbol{\theta}_{t-1}
-+
-\mathbf w_t,
-$$
-
-per cui $\mathbf F_t=\mathbf I$. Il random walk non afferma che i coefficienti fisiologici compiano realmente un moto casuale. Esprime una forma di regolarizzazione temporale: la migliore previsione iniziale è che i coefficienti persistano, ma $\mathbf Q_{\theta}$ permette loro di cambiare quando i dati forniscono evidenza sufficiente.
-
-È utile distinguere due quantità chiamate spesso “innovazione”:
-
-- l'innovazione VAR $\mathbf u_t$ rappresenta la parte di $\mathbf x_t$ non prevedibile mediante i ritardi nel modello vero;
-- l'innovazione del Kalman $\boldsymbol\nu_t$ è lo scarto calcolato usando la stima predetta dei coefficienti e comprende anche la loro incertezza.
-
-Le due quantità sono collegate, ma non sono intercambiabili. In particolare, la covarianza $\mathbf S_t$ contiene sia l'incertezza sui coefficienti sia $\mathbf R_u$.
-
-La dimensione dello stato cresce come $M^2p$ e quella di $\mathbf P_t$ cresce con il quadrato della dimensione dello stato. L'aumento del numero di canali o dell'ordine produce quindi un costo numerico e statistico molto rapido. Formulazioni strutturate o generalizzate del filtro possono ridurre tale costo, ma richiedono ipotesi sulla struttura delle covarianze e sui coefficienti (Milde et al., 2010).
+La dimensione dello stato cresce come $M^2p$ e $\mathbf P_t$ ha dimensione $M^2p\times M^2p$. L'aumento del numero di canali o dell'ordine produce quindi un costo numerico e statistico rapido. Formulazioni strutturate possono ridurlo, introducendo ipotesi sulla struttura dei coefficienti e delle covarianze (Milde et al., 2010).
 
 ### 16.4 Inizializzazione e ruolo delle covarianze
 
-Il comportamento del filtro dipende in modo sostanziale da quattro elementi:
+Il ciclo predizione–stima richiede una coppia iniziale $(\hat{\boldsymbol\theta}_0,\mathbf P_0)$, che viene usata come stima aggiornata al tempo iniziale. Nel TV-VAR, $\hat{\boldsymbol\theta}_0$ può provenire da un VAR stazionario su un intervallo preliminare, oppure essere posta a zero quando non è disponibile una stima preliminare. $\mathbf P_0$ deve riflettere la fiducia assegnata a tale scelta.
 
-| Quantità | Significato | Effetto di valori maggiori |
+La previsione successiva propaga questa informazione mediante $\mathbf F_t$ e aggiunge la variabilità $\mathbf Q_\theta$. La nuova misura interviene poi attraverso $\mathbf R_u$ e i regressori contenuti in $\mathbf H_t$.
+
+| Quantità | Significato | Ruolo nel ciclo |
 |---|---|---|
-| $\widehat{\boldsymbol\theta}_{0\|0}$ | stima iniziale dei coefficienti | dipende dai valori assegnati, non da una scala unica |
-| $\mathbf P_{0\|0}$ | incertezza iniziale sui coefficienti | maggiore correzione nelle prime osservazioni |
-| $\mathbf Q_{\theta}$ | variabilità ammessa nell'evoluzione dei coefficienti | adattamento più rapido e traiettorie meno regolari |
-| $\mathbf R_u$ | variabilità delle innovazioni VAR | minore peso del singolo campione osservato |
+| $\hat{\boldsymbol\theta}_0$ | Stima iniziale dei coefficienti | Punto di partenza della prima predizione |
+| $\mathbf P_0$ | Covarianza iniziale dell'errore di stima | Esprime la fiducia nell'inizializzazione |
+| $\mathbf Q_\theta$ | Variabilità ammessa nell'evoluzione dei coefficienti | Entra nella predizione $\mathbf P_t^-$ |
+| $\mathbf R_u$ | Covarianza delle innovazioni VAR | Entra in $\mathbf S_t$ e nel calcolo del guadagno |
 
-I coefficienti iniziali possono essere ottenuti da un VAR stazionario stimato su un intervallo iniziale oppure posti a zero quando non è disponibile una stima preliminare. La matrice $\mathbf P_{0|0}$ deve riflettere la fiducia in tale scelta. Un'inizializzazione incerta genera un transitorio durante il quale le stime possono cambiare rapidamente; questo intervallo va identificato e trattato con cautela.
+#### Incertezza predetta e incertezza aggiornata
 
-Se si assume
+$\mathbf P_t^-$ descrive l'incertezza sui coefficienti prima di usare il campione corrente. $\mathbf P_t$ descrive quella che rimane dopo l'aggiornamento. Sono entrambe covarianze dell'errore di stima dei coefficienti e vanno distinte dalla covarianza $\mathbf R_u$ delle innovazioni dei segnali.
 
-$$
-\mathbf Q_{\theta}=q\mathbf I,
-$$
+Nelle direzioni dello stato informate dalla misura, la correzione riduce l'incertezza predetta secondo il modello. Un singolo campione, tuttavia, non identifica tutti i coefficienti: il filtro accumula informazione attraverso regressori sufficientemente variabili nel tempo.
 
-il parametro $q$ impone la stessa variabilità a tutti i coefficienti. Un valore piccolo produce traiettorie regolari ma può attenuare o ritardare cambiamenti rapidi. Un valore grande permette un adattamento veloce, ma aumenta il rischio che il filtro interpreti rumore e artefatti come variazioni dei coefficienti.
+Un'inizializzazione incerta può produrre correzioni ampie nelle prime osservazioni. È quindi necessario identificare il transitorio di assestamento, durante il quale i risultati dipendono maggiormente dalle condizioni iniziali.
 
-Una matrice $\mathbf Q_{\theta}$ non diagonale o strutturata può rappresentare velocità diverse e variazioni coordinate tra gruppi di coefficienti. Questa flessibilità richiede però più parametri e scelte più difficili da giustificare. La struttura adottata deve quindi essere riportata esplicitamente.
+#### Variabilità dei coefficienti e variabilità delle osservazioni
 
-La matrice $\mathbf R_u$ descrive la variabilità non spiegata dal TV-VAR. Gli elementi fuori diagonale rappresentano variazioni contemporanee comuni alle equazioni, non connessioni ritardate. $\mathbf R_u$ può essere fissata usando un modello preliminare oppure aggiornata nel tempo, ma un aggiornamento troppo rapido rende difficile distinguere un cambiamento dei coefficienti da un cambiamento del rumore.
+Se si assume $\mathbf Q_\theta=q\mathbf I$, il parametro $q$ impone la stessa variabilità a tutti i coefficienti. Un valore piccolo produce traiettorie regolari, ma può attenuare o ritardare cambiamenti rapidi. Un valore grande aumenta l'incertezza predetta e permette correzioni più ampie, esponendo maggiormente la stima a rumore e artefatti.
 
-Il rapporto tra $\mathbf Q_{\theta}$ e $\mathbf R_u$ determina la scala temporale effettiva dell'adattamento:
+Una matrice $\mathbf Q_\theta$ strutturata può rappresentare velocità diverse e variazioni coordinate tra gruppi di coefficienti. La flessibilità aggiuntiva richiede scelte e parametri da giustificare.
 
-- aumentando $\mathbf Q_{\theta}$ rispetto a $\mathbf R_u$, il filtro attribuisce più facilmente gli errori di previsione a un cambiamento dei coefficienti;
-- aumentando $\mathbf R_u$ rispetto a $\mathbf Q_{\theta}$, il filtro li attribuisce più facilmente alla variabilità delle osservazioni.
+$\mathbf R_u$ descrive la variabilità non spiegata dai ritardi del TV-VAR. Gli elementi fuori diagonale rappresentano dipendenze contemporanee fra innovazioni, non connessioni ritardate. Può essere stimata mediante un modello preliminare oppure aggiornata nel tempo. Un adattamento troppo rapido sia di $\mathbf Q_\theta$ sia di $\mathbf R_u$ rende difficile distinguere variazioni dei coefficienti da variazioni del rumore.
 
-Non esiste quindi una risoluzione temporale determinata soltanto dalla frequenza di campionamento. Anche se il filtro produce una stima a ogni campione, due cambiamenti ravvicinati possono essere indistinguibili quando la memoria implicita del filtro è lunga.
+A parità delle altre condizioni, maggiore incertezza predetta rispetto al rumore osservativo aumenta il peso della misura nelle direzioni osservabili. Maggiore rumore osservativo riduce quel peso. Nel caso multivariato, il bilanciamento dipende anche dalla geometria di $\mathbf H_t$: non si riassume in un unico rapporto numerico fra matrici.
 
 #### Dati con più trial
 
-Con più prove sperimentali si può assumere che, allo stesso tempo relativo all'evento, i trial condividano le stesse matrici $\mathbf A_r(t)$. Le osservazioni dei diversi trial forniscono allora più informazione sullo stesso stato. Possono essere impilate in un'unica equazione di osservazione oppure elaborate con aggiornamenti equivalenti, purché sia specificata la struttura della covarianza tra trial.
+Con prove allineate all'evento si può assumere che, allo stesso tempo relativo, i trial condividano le matrici $\mathbf A_r(t)$. Le osservazioni possono essere impilate oppure elaborate con aggiornamenti successivi sullo stesso stato. La **predizione temporale va eseguita una volta per ogni avanzamento nel tempo**, non tra trial che informano lo stesso istante. L'equivalenza degli aggiornamenti richiede un trattamento coerente delle covarianze e delle eventuali dipendenze fra trial.
 
-Questa strategia aumenta l'informazione disponibile, ma richiede trial comparabili e correttamente allineati. Se la latenza della risposta varia tra prove, la stima può smussare la dinamica reale. Anche la standardizzazione deve essere descritta indicando lungo quale dimensione vengono calcolate media e deviazione standard.
+Questa strategia richiede prove comparabili e un allineamento adeguato. Jitter e variazioni sistematiche tra prove possono smussare la dinamica o violare l'ipotesi di uno stato condiviso. La standardizzazione va descritta indicando lungo quale dimensione si calcolano media e deviazione standard.
 
-#### Scelta pratica dei parametri
+#### Filtraggio, smoothing e scelta dei parametri
 
-I parametri adattivi non dovrebbero essere scelti soltanto perché producono mappe visivamente nette. È preferibile combinarne la valutazione mediante:
+La stima filtrata $\hat{\boldsymbol\theta}_t$ usa osservazioni disponibili fino a $t$. Uno **smoother** usa anche osservazioni successive per rivedere le stime precedenti. Le mappe filtrate e quelle smussate hanno quindi una diversa interpretazione temporale.
 
-- simulazioni con traiettorie dei coefficienti note;
-- errore di previsione e analisi delle innovazioni;
-- controllo della stabilità locale del VAR;
-- analisi di sensibilità a $\mathbf Q_{\theta}$, $\mathbf R_u$ e inizializzazione;
-- verifica della riproducibilità tra trial, soggetti o intervalli comparabili.
+La disponibilità di una stima a ogni campione non garantisce una risoluzione effettiva di un campione. La rapidità di adattamento dipende dal modello, dalle covarianze e dall'informazione nei regressori. I parametri vanno valutati mediante simulazioni note, errore di previsione e analisi delle innovazioni, controllo della stabilità locale e analisi di sensibilità all'inizializzazione e alle covarianze. L'aspetto delle mappe, da solo, non giustifica una scelta dei parametri.
 
-Una connessione che compare soltanto per una scelta molto specifica dei parametri adattivi è meno robusta di un risultato che persiste in un intervallo plausibile di configurazioni.
+### 16.5 Dalla stima aggiornata dei coefficienti alle mappe tempo-frequenza
 
-### 16.5 Dalla stima dei coefficienti alle mappe tempo-frequenza
-
-Per ogni istante si ricostruiscono le matrici
+Al termine della fase di stima, il vettore $\hat{\boldsymbol\theta}_t$ contiene i coefficienti aggiornati mediante il campione corrente. Invertendo la vettorizzazione si ricostruiscono
 
 $$
-\widehat{\mathbf A}_1(t),\ldots,
-\widehat{\mathbf A}_p(t)
+\hat{\mathbf B}_t=\operatorname{unvec}(\hat{\boldsymbol\theta}_t)
+=\begin{bmatrix}\hat{\mathbf A}_1(t)&\cdots&\hat{\mathbf A}_p(t)\end{bmatrix}.
 $$
 
-e la rappresentazione del modello nel dominio della frequenza:
+Queste matrici descrivono il VAR locale **dopo** aver incorporato $\mathbf x_t$. Usando invece $\hat{\boldsymbol\theta}_t^-$ si otterrebbe il modello predetto prima di tale aggiornamento. Occorre dichiarare quale dei due viene usato: qui costruiamo le mappe a partire dalla stima aggiornata.
+
+La rappresentazione in frequenza del modello locale è
 
 $$
-\widehat{\mathbf A}(f,t)
-=
-\mathbf I-
-\sum_{r=1}^{p}
-\widehat{\mathbf A}_r(t)
-e^{-\mathrm{i}2\pi fr\Delta t}.
+\hat{\mathbf A}(f,t)=\mathbf I-\sum_{r=1}^{p}\hat{\mathbf A}_r(t)e^{-\mathrm i2\pi fr\Delta t},
 $$
 
-La funzione di trasferimento locale è
+dove $f$ è in hertz e $\Delta t$ è il periodo di campionamento. La funzione di trasferimento locale è
 
 $$
-\widehat{\mathbf H}(f,t)
-=
-\widehat{\mathbf A}(f,t)^{-1}.
+\hat{\mathbf H}(f,t)=\hat{\mathbf A}(f,t)^{-1}.
 $$
 
-Applicando a queste matrici le definizioni introdotte nelle sezioni precedenti si ottengono causalità di Granger tempo-variante, PDC e DTF tempo-frequenza. La notazione generale
+$\mathbf H_t$ e $\hat{\mathbf H}(f,t)$ hanno ruoli diversi: la prima è la matrice di osservazione del filtro, costruita dai regressori, mentre la seconda è la funzione di trasferimento del VAR nel dominio della frequenza.
 
-$$
-\theta_{i\leftarrow j}(t,f)
-$$
+Applicando le definizioni introdotte nelle sezioni precedenti si ottengono PDC, DTF e le altre misure tempo-frequenza. Per la causalità di Granger e le misure che ne richiedono l'informazione, si usa anche la covarianza delle innovazioni VAR $\mathbf R_u$. La covarianza dei coefficienti $\mathbf P_t$ non può essere sostituita a $\mathbf R_u$: quantifica l'incertezza dello stimatore, non la variabilità delle innovazioni.
 
-indica la misura dalla sorgente $j$ al bersaglio $i$, valutata al tempo $t$ e alla frequenza $f$.
+La notazione generale $\theta_{i\leftarrow j}(t,f)$ indica la misura dalla sorgente $j$ al bersaglio $i$. Qui $\theta_{i\leftarrow j}(t,f)$ è una misura di connettività derivata dal modello e non una componente del vettore di stato $\boldsymbol\theta_t$.
 
-Prima dell'inversione di $\widehat{\mathbf A}(f,t)$ bisogna verificare la stabilità del modello locale. Un VAR instabile o molto vicino al limite di stabilità può generare picchi spettrali e valori di connettività estremi che dipendono dalla stima, non da una dinamica fisiologica plausibile.
+Prima di interpretare gli spettri e le misure derivate bisogna verificare la stabilità del VAR locale. L'aggiornamento di Kalman non garantisce tale proprietà. Un modello instabile o vicino al limite di stabilità può generare picchi e valori estremi poco affidabili.
 
-La presenza di una stima per ogni campione non implica una risoluzione fisiologica campione per campione. Ogni valore dipende dalla memoria del filtro, dall'inizializzazione, dalle covarianze e dalla quantità di informazione contenuta nei regressori. Le mappe devono quindi essere descritte come stime adattive localizzate nel tempo, specificando i parametri che ne determinano la scala temporale effettiva.
+È utile esaminare insieme coefficienti stimati, potenza dei segnali e misure normalizzate di connettività. PDC e DTF possono cambiare anche per effetto dei rispettivi denominatori. Per esempio, una diminuzione della PDC $j\to i$ non implica necessariamente una diminuzione del relativo coefficiente: possono essere aumentate altre uscite dalla sorgente.
 
-È inoltre utile esaminare separatamente:
-
-1. i coefficienti $\widehat{\mathbf A}_r(t)$;
-2. la potenza o gli spettri locali dei segnali;
-3. le misure normalizzate di connettività.
-
-PDC e DTF possono cambiare anche per effetto dei rispettivi denominatori. Una diminuzione della PDC $j\to i$, per esempio, non implica necessariamente che il corrispondente coefficiente sia diminuito: potrebbero essere aumentate altre uscite dalla sorgente che partecipano alla normalizzazione. Affiancare coefficienti, spettri e connettività aiuta a distinguere questi casi.
+Le mappe riassumono quindi il risultato dell'intero ciclo predizione–stima. La loro risoluzione effettiva dipende dalla memoria del filtro, dall'inizializzazione, dalle covarianze e dall'informazione nei dati. Filtraggio o smoothing e parametri adattivi devono accompagnare l'interpretazione dei cambiamenti osservati.
 
 La [Demo 52 — TV-VAR con finestre mobili, RLS e Kalman](../demo/demo_52_tv_var.md) confronta questi tre metodi per la stima tempo-variante del VAR e delle misure derivate.
 
