@@ -892,6 +892,8 @@ La [Demo 50](../demo/demo_50_bootstrap.md) applica questa procedura alle due pos
 
 Una relazione $x_j\rightarrow x_i$ indica che il passato di $x_j$ contiene informazione utile per prevedere $x_i$, condizionatamente alle variabili incluse nel modello. Non dimostra da sola una connessione anatomica o un meccanismo fisiologico diretto.
 
+A questo punto si può svolgere l'[esercitazione 1](../esercitazioni/esercitazione_1.md).
+
 ## 8. Limiti sperimentali e interpretativi
 
 ### 8.1 SNR diverso tra i canali
