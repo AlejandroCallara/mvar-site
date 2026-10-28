@@ -1418,13 +1418,11 @@ Per rendere l'analisi riproducibile è opportuno riportare almeno:
 
 In sintesi, una soglia statistica è interpretabile soltanto insieme alla procedura che l'ha generata. Cambiare il tipo di surrogato significa cambiare l'ipotesi nulla; cambiare la famiglia di confronti significa cambiare l'errore controllato.
 
-## 14. Percorso esercitativo
-
 L'[esercitazione 2](../esercitazioni/esercitazione_2.md) raccoglie il modello VAR(2) a quattro variabili, le attività di stima e il confronto fra PDC e DTF. Le spiegazioni e le figure dell'esempio sono disponibili nella stessa pagina, nella parte da consultare dopo lo svolgimento.
 
 L'[esercitazione 3](../esercitazioni/esercitazione_3.md) prosegue sullo stesso sistema con i surrogati di fase e le soglie di significatività. 
 
-## 15. Modelli VAR tempo-varianti
+## 14. Modelli VAR tempo-varianti
 
 Il modello VAR introdotto nelle sezioni precedenti assume che la relazione tra le variabili rimanga costante durante tutto l'intervallo analizzato. In altre parole, un unico insieme di matrici $\mathbf A_1,\ldots,\mathbf A_p$ descrive l'intera registrazione. Questa ipotesi può essere ragionevole per un segmento breve e sufficientemente omogeneo, ma diventa restrittiva quando il sistema attraversa condizioni diverse.
 
@@ -1462,7 +1460,7 @@ I principali approcci sono:
 
 Tutti introducono un compromesso tra rapidità di adattamento e affidabilità della stima. Se il metodo usa molta informazione passata, le stime risultano più regolari ma seguono con ritardo i cambiamenti. Se usa soprattutto dati recenti, localizza meglio le transizioni ma diventa più sensibile alla variabilità campionaria.
 
-### 15.1 Finestre mobili
+### 14.1 Finestre mobili
 
 L'approccio più diretto consiste nel suddividere la registrazione in finestre temporali e stimare un modello VAR separato in ciascuna finestra. Se la finestra contiene $W$ campioni e viene spostata di $Q$ campioni a ogni iterazione, il numero di modelli stimati su una registrazione di $T$ campioni è
 
@@ -1543,7 +1541,7 @@ In sintesi, le finestre scorrevoli sono semplici da applicare e rendono esplicit
 
 La [Demo 52](../demo/demo_52_tv_var.md) applica le finestre mobili a una singola realizzazione multivariata e confronta il risultato con RLS e filtro di Kalman, usando gli stessi segnali e lo stesso ordine.
 
-### 15.2 Recursive Least Squares
+### 14.2 Recursive Least Squares
 
 Il **Recursive Least Squares** (RLS) stima i coefficienti del VAR aggiornandoli ogni volta che diventa disponibile un nuovo campione. A differenza delle finestre mobili, non ristima il modello da zero su un blocco di dati: conserva una sintesi delle osservazioni precedenti e la modifica ricorsivamente.
 
@@ -1674,13 +1672,13 @@ L'aggiornamento non garantisce inoltre che il VAR stimato sia stabile a ogni ist
 
 Nella [Demo 52](../demo/demo_52_tv_var.md), i coefficienti noti permettono di osservare il compromesso fra variabilità delle stime e ritardo nell'inseguimento delle transizioni.
 
-## 16. Filtro di Kalman per il TV-VAR
+## 15. Filtro di Kalman per il TV-VAR
 
 Quando osserviamo un segnale rumoroso, una variazione della misura può dipendere da un cambiamento della quantità che vogliamo stimare oppure dal rumore. Il filtro di Kalman affronta questo problema combinando due informazioni: ciò che il modello prevede e ciò che la nuova misura suggerisce.
 
 A ogni istante il filtro aggiorna sia una stima sia l'incertezza associata. Per comprenderne il funzionamento, partiamo dalla stima di una singola quantità e successivamente estendiamo il ragionamento ai coefficienti di un VAR.
 
-### 16.1 Il ciclo del filtro: predizione e stima
+### 15.1 Il ciclo del filtro: predizione e stima
 
 Supponiamo di voler seguire una quantità nascosta $\theta_t$, osservabile attraverso una misura rumorosa $y_t$. Al tempo precedente disponiamo di una stima $\hat\theta_{t-1}$ e di una misura della sua incertezza $P_{t-1}$, espressa dalla varianza dell'errore di stima.
 
@@ -1749,7 +1747,7 @@ $$
 
 Il guadagno stabilisce quanto correggere la predizione verso il nuovo dato. Se la predizione è molto incerta rispetto alla misura, $K_t$ è vicino a uno. Se la misura è molto rumorosa rispetto alla predizione, $K_t$ è vicino a zero.
 
-### 16.2 Dal ciclo predizione–stima al modello stato-spazio
+### 15.2 Dal ciclo predizione–stima al modello stato-spazio
 
 Nell'esempio precedente abbiamo assunto che la migliore predizione fosse il valore stimato al passo precedente. Per descrivere dinamiche più generali introduciamo un **modello stato-spazio**.
 
@@ -1831,7 +1829,7 @@ $$
 \mathbf P_t\equiv\mathbf P_{t|t}.
 $$
 
-### 16.3 Applicazione al TV-VAR: lo stato contiene i coefficienti
+### 15.3 Applicazione al TV-VAR: lo stato contiene i coefficienti
 
 Per applicare questo schema al TV-VAR dobbiamo identificare **che cosa costituisce lo stato nascosto e che cosa costituisce l'osservazione**.
 
@@ -1915,7 +1913,7 @@ $$
 
 La dimensione dello stato cresce come $M^2p$ e $\mathbf P_t$ ha dimensione $M^2p\times M^2p$. L'aumento del numero di canali o dell'ordine produce quindi un costo numerico e statistico rapido. Formulazioni strutturate possono ridurlo, introducendo ipotesi sulla struttura dei coefficienti e delle covarianze (Milde et al., 2010).
 
-### 16.4 Inizializzazione e ruolo delle covarianze
+### 15.4 Inizializzazione e ruolo delle covarianze
 
 Il ciclo predizione–stima richiede una coppia iniziale $(\hat{\boldsymbol\theta}_0,\mathbf P_0)$, che viene usata come stima aggiornata al tempo iniziale. Nel TV-VAR, $\hat{\boldsymbol\theta}_0$ può provenire da un VAR stazionario su un intervallo preliminare, oppure essere posta a zero quando non è disponibile una stima preliminare. $\mathbf P_0$ deve riflettere la fiducia assegnata a tale scelta.
 
@@ -1958,7 +1956,7 @@ La stima filtrata $\hat{\boldsymbol\theta}_t$ usa osservazioni disponibili fino 
 
 La disponibilità di una stima a ogni campione non garantisce una risoluzione effettiva di un campione. La rapidità di adattamento dipende dal modello, dalle covarianze e dall'informazione nei regressori. I parametri vanno valutati mediante simulazioni note, errore di previsione e analisi delle innovazioni, controllo della stabilità locale e analisi di sensibilità all'inizializzazione e alle covarianze. L'aspetto delle mappe, da solo, non giustifica una scelta dei parametri.
 
-### 16.5 Dalla stima aggiornata dei coefficienti alle mappe tempo-frequenza
+### 15.5 Dalla stima aggiornata dei coefficienti alle mappe tempo-frequenza
 
 Al termine della fase di stima, il vettore $\hat{\boldsymbol\theta}_t$ contiene i coefficienti aggiornati mediante il campione corrente. Invertendo la vettorizzazione si ricostruiscono
 
@@ -1995,7 +1993,7 @@ Le mappe riassumono quindi il risultato dell'intero ciclo predizione–stima. La
 
 La [Demo 52 — TV-VAR con finestre mobili, RLS e Kalman](../demo/demo_52_tv_var.md) confronta questi tre metodi per la stima tempo-variante del VAR e delle misure derivate.
 
-## 17. Inferenza sulle mappe tempo-frequenza
+## 16. Inferenza sulle mappe tempo-frequenza
 
 Una mappa tempo-frequenza contiene un valore per molte combinazioni di direzione, tempo e frequenza. Prima di costruire una soglia bisogna definire la domanda statistica, perché ipotesi diverse richiedono distribuzioni nulle diverse.
 
@@ -2007,7 +2005,7 @@ Una mappa tempo-frequenza contiene un valore per molte combinazioni di direzione
 
 Un test di presenza della connessione non equivale a un test di variazione rispetto al basale. Una connessione può essere significativa in entrambe le condizioni senza che la loro differenza sia significativa; al contrario, due valori singolarmente incerti possono mostrare una differenza sistematica tra condizioni.
 
-### 17.1 Surrogati e intera pipeline di stima
+### 16.1 Surrogati e intera pipeline di stima
 
 Quando si usano dati surrogati, ciascun dataset deve attraversare la stessa procedura applicata ai dati osservati:
 
@@ -2021,7 +2019,7 @@ Applicare i surrogati soltanto alle mappe già calcolate ignora l'incertezza int
 
 Il tipo di surrogato deve preservare gli aspetti che non appartengono all'ipotesi nulla. Per esempio, un test tra condizioni può usare permutazioni delle etichette quando il disegno sperimentale rende le etichette scambiabili. Un test di connessione richiede invece una procedura che elimini la relazione in esame conservando, per quanto possibile, la dinamica univariata e le altre caratteristiche rilevanti. La randomizzazione delle fasi descritta nella sezione 13 produce una null globale e può eliminare anche la struttura temporale legata all'evento; non è automaticamente adatta a ogni domanda tempo-frequenza.
 
-### 17.2 Confronti multipli
+### 16.2 Confronti multipli
 
 Una soglia puntuale al livello $\alpha$ controlla l'errore di un singolo punto, ma non la probabilità di falsi positivi sull'intera mappa. Inoltre, punti vicini nel tempo e nella frequenza sono correlati per effetto della dinamica dei segnali e della memoria dello stimatore.
 
@@ -2040,7 +2038,7 @@ I test basati su cluster sfruttano la contiguità dei punti. In ogni surrogato s
 
 La FDR rappresenta un'altra possibilità quando l'obiettivo è controllare la proporzione attesa di falsi positivi tra i risultati dichiarati significativi. La scelta tra FDR, max-statistic e cluster dipende dalla domanda e dal tipo di conclusione che si vuole sostenere.
 
-### 17.3 Interpretazione e analisi di sensibilità
+### 16.3 Interpretazione e analisi di sensibilità
 
 È prudente evitare interpretazioni basate su singoli pixel isolati o su variazioni che coincidono con instabilità del modello, artefatti o grandi innovazioni. Una struttura fisiologicamente plausibile dovrebbe mostrare una certa coerenza temporale o spettrale e rimanere riconoscibile quando si modificano moderatamente i parametri dell'analisi.
 
@@ -2054,7 +2052,7 @@ L'analisi di sensibilità dovrebbe verificare almeno l'effetto di:
 
 Le bande di frequenza e le finestre temporali motivate dall'ipotesi sperimentale possono essere definite prima dell'analisi e usate per ottenere statistiche riassuntive. Questo riduce il numero di confronti e rende la conclusione più vicina alla domanda fisiologica, purché la definizione non venga adattata dopo avere osservato i risultati.
 
-## 18. Checklist per un'analisi riproducibile
+## 17. Checklist per un'analisi riproducibile
 
 Un'analisi di connettività basata su VAR dovrebbe permettere a un altro ricercatore di ricostruire sia il modello sia tutte le decisioni che trasformano i segnali nelle mappe finali.
 
